@@ -1,5 +1,5 @@
 {
-  "name": "e-nilami",
+  "name": "server",
   "version": "1.0.0",
   "description": "A web app where user can buy and sell new and used items and they can also put them on auction",
   "main": "index.js",
