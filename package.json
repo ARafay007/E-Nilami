@@ -1,0 +1,11 @@
+{
+  "name": "e-nilami",
+  "version": "1.0.0",
+  "description": "A web app where user can buy and sell new and used items and they can also put them on auction",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Abdul Rafay",
+  "license": "ISC"
+}
