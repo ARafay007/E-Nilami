@@ -45,8 +45,8 @@ username:{
     unique:true,
     lowercase:true
 },
-
+access:[String],
 isDisable:Boolean
 });
 
-exports.default = model('users',userSchema)
+exports.default = model('admins',userSchema)
