@@ -7,13 +7,8 @@ activity:{
     type:String,
     required:[true,"Activity name is Required"]
 },
-item_name:{
+highest_bidder:{
     type:String,
-    required:[true,"Item name is Required"]
-},
-item_price:{
-    type:Number,
-    required:[true,"Price is Required"]
 },
 image:[{
     type:String
@@ -23,12 +18,12 @@ condition:{
     type:String,
     required:[true,"Condition is Required"],
 },
-description:{
-    type:String
-},
-date:{
+end_date:{
     type:Date,
     required:[true,"Price is Required"]
+},
+description:{
+    type:String
 },
 isDisable:Boolean
 });

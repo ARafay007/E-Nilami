@@ -5,3 +5,9 @@ exports.getUserData = (req, res) => {
     res.status(200).json({ data: "Request Recieved" });
   } catch (e) {}
 };
+
+exports.getUserAds=(req,res)=>{
+  try {
+    res.status(200).json({ data: "Request Recieved" });
+  } catch (e) {}
+}
