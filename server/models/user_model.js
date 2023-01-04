@@ -6,13 +6,13 @@ name:{
     type:String,
     required:[true,"Name is Required"]
 },
-fatherName:{
+lastname:{
     type:String,
     required:[true,"Father's name is Required"]
 },
 nic:{
     type:String,
-    required:[true,"Father's name is Required"],
+    required:[true,"NIC name is Required"],
     maxlenght:15
 },
 contact:{
@@ -22,7 +22,7 @@ contact:{
 },
 image:String
 ,
-Location:{
+location:{
     type:String,
     required:[true,"Location is Required"],
 },
@@ -40,7 +40,7 @@ password:{
 },
 username:{
     type:String,
-    required:[true,"username is Required"],
+    // required:[true,"username is Required"],
     minlength:6,
     unique:true,
     lowercase:true

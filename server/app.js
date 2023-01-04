@@ -1,14 +1,14 @@
-const express =require("express");
-const {userRouter} =require('./routes')
+const express = require("express");
+const { userRouter } = require("./routes");
 
-const app= express();
+const app = express();
 
-app.use('/api/v1/user',userRouter);
+app.use(express.json());
 
-app.get('/',(req,res)=>{
-    res.send("Hello");
+app.use("/api/v1/user", userRouter);
+
+app.get("/", (req, res) => {
+  res.send("Hello");
 });
 
-app.listen(3000,()=>{
-    console.log("App is Listening")
-});
+module.exports=app;

@@ -30,6 +30,13 @@ date:{
     type:Date,
     required:[true,"Price is Required"]
 },
+highest_bidder:{
+    type:String,
+},
+end_date:{
+    type:Date,
+    required:[true,"Price is Required"]
+},
 isDisable:Boolean
 });
 

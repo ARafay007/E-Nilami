@@ -6,8 +6,18 @@ exports.getUserData = (req, res) => {
   } catch (e) {}
 };
 
-exports.getUserAds=(req,res)=>{
+exports.getUserAds = (req, res) => {
   try {
     res.status(200).json({ data: "Request Recieved" });
   } catch (e) {}
-}
+};
+
+exports.createUser = async (req, res) => {
+  try {
+    console.log(req.body);
+    const data = await user.create(req.body);
+    res.status(200).json({ data });
+  } catch (e) {
+    res.status(400).json({ e });
+  }
+};
