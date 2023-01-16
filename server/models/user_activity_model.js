@@ -2,42 +2,47 @@ const {Schema,model} = require('mongoose');
 const validator = require('validator');
 
 const userSchema=new Schema({
-user_id: [{ type: Schema.Types.ObjectId, ref: 'users' }],
-activity:{
-    type:String,
-    required:[true,"Activity name is Required"]
-},
-item_name:{
-    type:String,
-    required:[true,"Item name is Required"]
-},
-item_price:{
-    type:Number,
-    required:[true,"Price is Required"]
-},
-image:[{
-    type:String
-}]
-,
-condition:{
-    type:String,
-    required:[true,"Condition is Required"],
-},
-description:{
-    type:String
-},
-date:{
-    type:Date,
-    required:[true,"Price is Required"]
-},
-highest_bidder:{
-    type:String,
-},
-end_date:{
-    type:Date,
-    required:[true,"Price is Required"]
-},
-isDisable:Boolean
+    user_id: [{ type: Schema.Types.ObjectId, ref: 'users' }],
+    activity:{
+        type:String,
+        enum: ['SELL', 'BID'],
+        required:[true,"Activity name is Required"]
+    },
+    item_name:{
+        type:String,
+        required:[true,"Item name is Required"]
+    },
+    item_price:{
+        type:Number,
+        required:[true,"Price is Required"]
+    },
+    image:[{
+        type:String
+    }]
+    ,
+    condition:{
+        type:String,
+        required:[true,"Condition is Required"],
+    },
+    description:{
+        type:String
+    },
+    date:{
+        type:Date,
+        required:[true,"Date is Required"]
+    },
+    highest_bidder:{
+        type:String,
+    },
+    end_date:{
+        type:Date,
+        // required:[true,"Price is Required"]
+    },
+    isDisable:{
+        type: Boolean,
+        default: false
+    }
 });
 
-exports.default = model('user_Activity',userSchema)
+const userActivity = model('user_Activity',userSchema)
+module.exports = userActivity;

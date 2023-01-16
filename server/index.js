@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 require('dotenv').config();
 const DB = process.env.DB_URL.replace("<PASSWORD>", process.env.DB_PASSWORD);
-console.log(DB);
 const app = require("./app.js");
 
 mongoose
@@ -16,6 +15,6 @@ mongoose
     console.log(err);
   });
 
-app.listen(3000, () => {
-  console.log("App is Listening");
+app.listen(3005, () => {
+  console.log("App is Listening 3005");
 });
