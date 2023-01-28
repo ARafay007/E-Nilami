@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
+import SearchSection from './Components/SearchSection';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -17,16 +18,9 @@ function App() {
     <Box sx={{ width: 1 }}>
       <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
         <Box gridColumn="span 12">
-          <Item>xs=8</Item>
-        </Box>
-        <Box gridColumn="span 6">
-          <Item>xs=4</Item>
-        </Box>
-        <Box gridColumn="span 6">
-          <Item>xs=4</Item>
+        <SearchSection/>
         </Box>
         <Box gridColumn="span 12">
-          <Item>xs=8</Item>
         </Box>
       </Box>
     </Box>
