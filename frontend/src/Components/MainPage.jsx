@@ -1,12 +1,22 @@
 import { Link } from 'react-router-dom';
 import {Grid, Card, CardActionArea, CardMedia, CardContent, Typography} from '@mui/material';
+import Banner from './Banner'
 
 const MainPage = () => {
+
+  const banner = {
+    title: 'E-Nilami Marketplace',
+    description:
+      " Pakistan's Only Auction and Classified Advertisment System.Best way to sell the things that you are not using and earn some cash.",
+    image: 'https://images.unsplash.com/photo-1579548122080-c35fd6820ecb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+    imageText: 'graphic',
+    linkText: 'Comming Soon',
+  };
 
   const items = () => {
     const itemsArray = [];
 
-    for(let i=0; i<8; i++){
+    for(let i=0; i<5; i++){
       itemsArray.push(<Grid item xs={12} lg={4}>
         <Link to='/detail' style={{textDecoration: 'none'}}>
           <Card sx={{ maxWidth: 345 }}>
@@ -36,8 +46,13 @@ const MainPage = () => {
   }
 
   return(
+    <Grid container spacing={1}>
+    <Grid xs={12}>
+      <Banner post={banner} />
+     </Grid>
     <Grid container spacing={2}>
       {items()}
+    </Grid>
     </Grid>
   );
 }

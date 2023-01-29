@@ -5,6 +5,9 @@ import SearchSection from './Components/SearchSection';
 import MainPage from './Components/MainPage';
 import DetailPage from './Components/detailPage';
 import Listings from './Components/listingsPage';
+import SignInPage from './Components/SignInPage';
+import SignUp from './Components/SignUp';
+import Header from './Components/Header';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -13,6 +16,19 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: 'center',
   color: theme.palette.text.secondary,
 }));
+
+const sections = [
+  { title: 'Mobile', url: '#' },
+  { title: 'Furniture', url: '#' },
+  { title: 'Car', url: '#' },
+  { title: 'Motorcycles', url: '#' },
+  { title: 'Houses', url: '#' },
+  { title: 'TV', url: '#' },
+  { title: 'Tablets', url: '#' },
+  { title: 'Land & Plots', url: '#' },
+  { title: 'Animals', url: '#' },
+  { title: 'Books', url: '#' },
+];
 
 function App() {
   return (
@@ -27,6 +43,9 @@ function App() {
     // </Box>
     <Container fixed>
       <Grid container spacing={2}>
+      <Grid item xs={12} lg={12}>
+          <Item> <Header title="E-Nilami" sections={sections} /> </Item>
+        </Grid>
         <Grid item xs={12} lg={12}>
           <Item> <SearchSection /> </Item>
         </Grid>
@@ -37,6 +56,8 @@ function App() {
                 <Route path='/' element={<MainPage />} />
                 <Route path='/detail' element={<DetailPage />} />
                 <Route path='/listings' element={<Listings />} />
+                <Route path='/signIn' element={<SignInPage/>} />
+                <Route path='/signUp' element={<SignUp/>} />
             </Routes>
           </Item>
         </Grid>
