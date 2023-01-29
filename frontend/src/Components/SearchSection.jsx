@@ -23,7 +23,9 @@ const SearchSection = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} lg={2}>
-        <h2>E-NILAMI</h2>
+      <Link href="/" underline="hover" sx={{marginBottom: '5px'}} >
+        <h2 >E-NILAMI</h2>
+        </Link>
       </Grid>
       <Grid item xs={12} lg={4}>
         <FormControl sx={{ m: 1, minWidth: 120 }}>
@@ -65,10 +67,10 @@ const SearchSection = () => {
       </Grid>
       <Grid item xs={12} lg={1}>
         <FormControl sx={{ m: 1, minWidth: 100 }}>
-          <Link href="#" underline="hover" sx={{marginBottom: '5px'}}>
+          <Link href="/signIn" underline="hover" sx={{marginBottom: '5px'}}>
             Login
           </Link>
-          <Link href="#" underline="hover" sx={{marginBottom: '5px'}} >
+          <Link href="/signUp" underline="hover" sx={{marginBottom: '5px'}} >
             sign up
           </Link>
         </FormControl>
