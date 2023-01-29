@@ -4,6 +4,7 @@ import { styled, Paper } from '@mui/material';
 import SearchSection from './Components/SearchSection';
 import MainPage from './Components/MainPage';
 import DetailPage from './Components/detailPage';
+import Listings from './Components/listingsPage';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -35,6 +36,7 @@ function App() {
             <Routes>
                 <Route path='/' element={<MainPage />} />
                 <Route path='/detail' element={<DetailPage />} />
+                <Route path='/listings' element={<Listings />} />
             </Routes>
           </Item>
         </Grid>
