@@ -5,9 +5,9 @@ const DetailPage = () => {
   const otherImages = () => {
     const imgs = [];
 
-    for(let i=0; i<6; i++){
+    for(let i=0; i<5; i++){
       imgs.push(
-        <Grid item xs={6} lg={2}>
+        <Grid item xs={6} lg={2} key={i}>
           <Box
             sx={{
               width: 50,

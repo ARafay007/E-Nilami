@@ -8,6 +8,8 @@ import Listings from './Components/listingsPage';
 import SignInPage from './Components/SignInPage';
 import SignUp from './Components/SignUp';
 import Header from './Components/Header';
+import Ads from './Components/adsPage';
+import './styles/style.css';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -32,15 +34,6 @@ const sections = [
 
 function App() {
   return (
-    // <Box sx={{ width: 1 }}>
-    //   <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
-    //     <Box gridColumn="span 12">
-    //     <SearchSection/>
-    //     </Box>
-    //     <Box gridColumn="span 12">
-    //     </Box>
-    //   </Box>
-    // </Box>
     <Container fixed>
       <Grid container spacing={2}>
       <Grid item xs={12} lg={12}>
@@ -55,6 +48,7 @@ function App() {
             <Routes>
                 <Route path='/' element={<MainPage />} />
                 <Route path='/detail' element={<DetailPage />} />
+                <Route path='/ads' element={<Ads />} />
                 <Route path='/listings' element={<Listings />} />
                 <Route path='/signIn' element={<SignInPage/>} />
                 <Route path='/signUp' element={<SignUp/>} />

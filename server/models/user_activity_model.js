@@ -12,7 +12,7 @@ const userSchema=new Schema({
         type:String,
         required:[true,"Item name is Required"]
     },
-    item_price:{
+    price:{
         type:Number,
         required:[true,"Price is Required"]
     },

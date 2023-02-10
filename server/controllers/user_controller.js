@@ -69,8 +69,10 @@ exports.getUsersAds = async (req, res) => {
 
 exports.addUserActivity = async (req, res) => {
   try{
-    const data = await userActivity.create(req.body);
-    res.status(200).json({data});
+    console.log(req.file);
+    console.log(req.body);
+    // const data = await userActivity.create(req.body);
+    res.status(200).json({data: 'data'});
   }
   catch(err){
     res.status(400).json({err});

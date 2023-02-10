@@ -17,7 +17,8 @@ const MainPage = () => {
     const itemsArray = [];
 
     for(let i=0; i<5; i++){
-      itemsArray.push(<Grid item xs={12} lg={4}>
+      itemsArray.push(
+      <Grid item xs={12} lg={4} key={i}>
         <Link to='/detail' style={{textDecoration: 'none'}}>
           <Card sx={{ maxWidth: 345 }}>
             <CardActionArea>
@@ -47,7 +48,7 @@ const MainPage = () => {
 
   return(
     <Grid container spacing={1}>
-    <Grid xs={12}>
+    <Grid item xs={12}>
       <Banner post={banner} />
      </Grid>
     <Grid container spacing={2}>
