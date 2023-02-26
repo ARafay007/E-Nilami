@@ -1,13 +1,14 @@
-import { useEffect, useState, useReducer } from 'react';
-import { Grid, TextField, Divider, Box, FormLabel, FormControlLabel, RadioGroup, Radio, FormControl, Button} from '@mui/material';
-// import {DeleteForeverRoundedIcon} from '@mui/icons-material';
+import { useEffect, useState, useReducer, useContext } from 'react';
+import { Grid, TextField, Divider, Box, FormLabel, FormControlLabel, RadioGroup, Radio, FormControl, Button, InputLabel, Select, MenuItem} from '@mui/material';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
+import {UserContext} from '../ContextAPI/userContext';
 
 const initialState = {
   item_name: '',
   price: '',
   condition: '',
   activity: '',
+  category: '',
   image: []
 };
 
@@ -27,9 +28,10 @@ const reducer = (state, action) => {
   }
 };
 
-const Ads = () => {
+const PostAds = () => {
   const [adDetail, dispatch] = useReducer(reducer, initialState);
   const [imgsPreview, setImgsPreview] = useState([]);
+  const {user} = useContext(UserContext);
 
   useEffect(() => {
     if(!adDetail.image.length) return;
@@ -68,23 +70,26 @@ const Ads = () => {
   };
 
   const submit = async () => {
+    const {item_name, price, condition, activity, category, image} = adDetail;
     const formData = new FormData();
-    const {item_name, price, condtion, activity} = adDetail;
-    formData.append('itemName', item_name);
+    formData.append('user_id', user.data._id);
+    formData.append('item_name', item_name);
     formData.append('price', price);
-    formData.append('condition', condtion)
+    formData.append('condition', condition)
     formData.append('activity', activity);
-    // formData.append('images[]', [...adDetail.image]);
-    formData.append('images', adDetail.image[0]);
+    formData.append('category', category);
+    formData.append('date', Date.now());
+    
+    for(let i=0; i<image.length; i++){
+      formData.append('images', image[i]);
+    }
 
     const resp = await fetch('http://localhost:3005/api/v1/user/userActivity', {
       method: 'POST',
       body: formData
     });
 
-    console.log(resp);
     const data = await resp.json();
-    console.log(data);
   };
 
   return (
@@ -101,7 +106,7 @@ const Ads = () => {
                 <TextField sx={{width: 200}} onChange={e => onChangeValue(e, 'item_name')} value={adDetail.item_name} id="standard-basic" label="Item Name" variant="standard" />
               </Grid>
               <Grid item xs={12} lg={6}>
-                <TextField sx={{width: 200}} onChange={e => onChangeValue(e, 'price')} value={adDetail.price} label="Price" variant="standard" inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} />
+                <TextField sx={{width: 200}} type='number' onChange={e => onChangeValue(e, 'price')} value={adDetail.price} label="Price" variant="standard" inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} />
               </Grid>
               <Grid item xs={12} lg={6}>
                 <TextField sx={{width: 200}} onChange={e => onChangeValue(e, 'condition')} value={adDetail.condition} label="Condition" variant="standard" />
@@ -117,6 +122,22 @@ const Ads = () => {
                     <FormControlLabel onChange={e => onChangeValue(e, 'activity')} value="SELL" control={<Radio />} label="Sell" />
                     <FormControlLabel onChange={e => onChangeValue(e, 'activity')} value="BID" control={<Radio />} label="Bid" />
                   </RadioGroup>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} lg={6}>
+                <FormControl variant="standard" sx={{ minWidth: 200 }}>
+                  <InputLabel id="demo-simple-select-label">Categories</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Option"
+                    value={adDetail.category}
+                    onChange={e => onChangeValue(e, 'category')}
+                  >
+                    <MenuItem value='Vehicle'>Vehicle</MenuItem>
+                    <MenuItem value='Electronics'>Electronics</MenuItem>
+                    <MenuItem value='House'>House</MenuItem>
+                  </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={12} lg={6}>
@@ -163,4 +184,4 @@ const Ads = () => {
   );
 };
 
-export default Ads;
+export default PostAds;

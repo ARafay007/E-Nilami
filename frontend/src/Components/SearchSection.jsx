@@ -1,5 +1,6 @@
 import React from 'react'
-import {Grid, TextField, Button, FormControl, Autocomplete, Box, Link} from '@mui/material';
+import { Link } from 'react-router-dom';
+import {Grid, TextField, Button, FormControl, Autocomplete, Box} from '@mui/material';
 
 const SearchSection = () => {
   const cities = [
@@ -23,9 +24,9 @@ const SearchSection = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} lg={2}>
-      <Link href="/" underline="hover" sx={{marginBottom: '5px'}} >
+      <Link to="/" underline="hover" style={{marginBottom: '5px'}} >
         <h2 >E-NILAMI</h2>
-        </Link>
+      </Link>
       </Grid>
       <Grid item xs={12} lg={4}>
         <FormControl sx={{ m: 1, minWidth: 120 }}>
@@ -67,10 +68,10 @@ const SearchSection = () => {
       </Grid>
       <Grid item xs={12} lg={1}>
         <FormControl sx={{ m: 1, minWidth: 100 }}>
-          <Link href="/signIn" underline="hover" sx={{marginBottom: '5px'}}>
+          <Link to="/signIn" underline="hover" style={{marginBottom: '5px'}}>
             Login
           </Link>
-          <Link href="/signUp" underline="hover" sx={{marginBottom: '5px'}} >
+          <Link to="/signUp" underline="hover" style={{marginBottom: '5px'}} >
             sign up
           </Link>
         </FormControl>

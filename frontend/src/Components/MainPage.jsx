@@ -1,8 +1,21 @@
+import {useEffect, useContext} from 'react';
 import { Link } from 'react-router-dom';
-import {Grid, Card, CardActionArea, CardMedia, CardContent, Typography} from '@mui/material';
+import {Grid, Card, CardActionArea, CardMedia, CardContent, Typography, Divider, Chip} from '@mui/material';
 import Banner from './Banner'
+import {UserContext} from '../ContextAPI/userContext';
 
 const MainPage = () => {
+  const {ads, storeAds} = useContext(UserContext);
+  
+  useEffect(() => {
+    getAds();
+  }, []);
+
+  const getAds = async () => {
+    const resp = await fetch('http://localhost:3005/api/v1/user/userActivity');
+    const data = await resp.json();
+    storeAds(data.data);
+  };
 
   const banner = {
     title: 'E-Nilami Marketplace',
@@ -13,38 +26,81 @@ const MainPage = () => {
     linkText: 'Comming Soon',
   };
 
-  const items = () => {
+  const items = (category) => {
     const itemsArray = [];
 
-    for(let i=0; i<5; i++){
-      itemsArray.push(
+    return category.map((el, i) => (
       <Grid item xs={12} lg={4} key={i}>
-        <Link to='/detail' style={{textDecoration: 'none'}}>
+        <Link to='/detail' state={{adDetail: el}} style={{textDecoration: 'none'}}>
           <Card sx={{ maxWidth: 345 }}>
             <CardActionArea>
               <CardMedia
                 component="img"
                 height="140"
-                image="./982990.jpg"
+                image={el.image[0]}
                 alt="green iguana"
               />
               <CardContent>
                 <Typography variant="body2" color="text.secondary">
-                  Lizards are a widespread group of squamate reptiles, with over 6,000
-                  species, ranging across all continents except Antarctica
+                  Condition: {el.condition}
                 </Typography>
                 <Typography gutterBottom variant="h5" component="div">
-                  Lizard
+                  {el.item_name}
                 </Typography>
               </CardContent>
             </CardActionArea>
           </Card>
         </Link>
-      </Grid>);
+      </Grid>)
+    );
+    
+    // for(let i=0; i<5; i++){
+    //   itemsArray.push(
+    //   <Grid item xs={12} lg={4} key={i}>
+    //     <Link to='/detail' style={{textDecoration: 'none'}}>
+    //       <Card sx={{ maxWidth: 345 }}>
+    //         <CardActionArea>
+    //           <CardMedia
+    //             component="img"
+    //             height="140"
+    //             image="./982990.jpg"
+    //             alt="green iguana"
+    //           />
+    //           <CardContent>
+    //             <Typography variant="body2" color="text.secondary">
+    //               Lizards are a widespread group of squamate reptiles, with over 6,000
+    //               species, ranging across all continents except Antarctica
+    //             </Typography>
+    //             <Typography gutterBottom variant="h5" component="div">
+    //               Lizard
+    //             </Typography>
+    //           </CardContent>
+    //         </CardActionArea>
+    //       </Card>
+    //     </Link>
+    //   </Grid>);
+    // }
+
+    // return itemsArray;
+  };
+
+  const itemCategoriesList = () => {
+    const categoryArray = [];
+
+    for(let category in ads){
+      ads[category].length && categoryArray.push(
+        <Grid item xs={12} lg={12} key={category}>
+          {/* <h2>{category}</h2> */}
+          <Divider textAlign="left" style={{marginBottom: '20px'}}><h2>{category}</h2></Divider>
+          <Grid container spacing={2}>
+            {items(ads[category])}
+          </Grid>
+        </Grid>
+      );
     }
 
-    return itemsArray;
-  }
+    return categoryArray;
+  };
 
   return(
     <Grid container spacing={1}>
@@ -52,7 +108,7 @@ const MainPage = () => {
       <Banner post={banner} />
      </Grid>
     <Grid container spacing={2}>
-      {items()}
+      {itemCategoriesList()}
     </Grid>
     </Grid>
   );

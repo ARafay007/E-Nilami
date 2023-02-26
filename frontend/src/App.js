@@ -1,14 +1,16 @@
+import { useContext } from 'react';
 import {Routes, Route} from 'react-router-dom';
 import {Container, Grid} from '@mui/material';
 import { styled, Paper } from '@mui/material';
 import SearchSection from './Components/SearchSection';
+import { UserContext, UserContextProvider } from './ContextAPI/userContext';
 import MainPage from './Components/MainPage';
 import DetailPage from './Components/detailPage';
 import Listings from './Components/listingsPage';
 import SignInPage from './Components/SignInPage';
 import SignUp from './Components/SignUp';
 import Header from './Components/Header';
-import Ads from './Components/adsPage';
+import PostAds from './Components/adsPage';
 import './styles/style.css';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -32,7 +34,13 @@ const sections = [
   { title: 'Books', url: '#' },
 ];
 
+const UnAuthorizedAccess = () => {
+  return <h2>You are not logged in.</h2>
+}
+
 function App() {
+  const {user} = useContext(UserContext);
+
   return (
     <Container fixed>
       <Grid container spacing={2}>
@@ -48,7 +56,7 @@ function App() {
             <Routes>
                 <Route path='/' element={<MainPage />} />
                 <Route path='/detail' element={<DetailPage />} />
-                <Route path='/ads' element={<Ads />} />
+                <Route path='/postAds' element={user?.data?._id ? <PostAds /> : <UnAuthorizedAccess />} />
                 <Route path='/listings' element={<Listings />} />
                 <Route path='/signIn' element={<SignInPage/>} />
                 <Route path='/signUp' element={<SignUp/>} />

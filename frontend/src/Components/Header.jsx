@@ -1,19 +1,26 @@
-import * as React from 'react';
+import React, {useContext} from 'react';
+import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
-
+import {Toolbar, Button, Typography, Select, MenuItem, FormControl, InputLabel, Box} from '@mui/material';
+import {UserContext} from '../ContextAPI/userContext';
 function Header(props) {
   const { sections, title } = props;
+  const [age, setAge] = React.useState('');
+  const{user, defineUser} = useContext(UserContext);
+
+  const linkStyle = {
+    textDecoration: 'none',
+    color: 'black',
+  };
+
+  const logoutUser = () => {defineUser({})};
 
   return (
     <React.Fragment>
       <Toolbar sx={{ borderBottom: 1, borderColor: 'divider' }}>
-      <Button href='/signIn' variant="outlined" size="small">
-          Sign In
-        </Button>
+        {
+          user?.data?.name || <Button href='/signIn' variant="outlined" size="small">Sign In</Button>
+        }
         <Typography
           component="h2"
           variant="h5"
@@ -24,27 +31,60 @@ function Header(props) {
         >
           {title}
         </Typography>
-        <Button href='/signUp' variant="outlined" size="small">
-          Sign up
-        </Button>
+        {
+          user?.data?.name ? 
+          <Box sx={{ minWidth: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Options</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Option"
+                value={age}
+                // onChange={handleChange}
+              >
+                <Link to='/' style={linkStyle}><MenuItem value={10}>Home</MenuItem></Link>
+                <Link to='/postAds' style={linkStyle}><MenuItem value={10}>Post Ad</MenuItem></Link>
+                <Link to='/listings' state={{listingDetail: user.data}} style={linkStyle}><MenuItem value={10}>My Ads</MenuItem></Link>
+                <MenuItem value={10} onClick={logoutUser}>Logout</MenuItem>
+              </Select>
+            </FormControl>
+          </Box> : 
+          <Button href='/signUp' variant="outlined" size="small">Sign up</Button>
+        }
       </Toolbar>
       <Toolbar
         component="nav"
         variant="dense"
-        sx={{ justifyContent: 'space-between', overflowX: 'auto' }}
+        sx={{ justifyContent: 'space-around', overflowX: 'auto' }}
       >
-        {sections.map((section) => (
-          <Link
-            color="inherit"
-            noWrap
-            key={section.title}
-            variant="body2"
-            href={section.url}
-            sx={{ p: 1, flexShrink: 0 }}
-          >
-            {section.title}
-          </Link>
-        ))}
+        <Link
+          color="inherit"
+          key='Vehicle'
+          state={{listingDetail: 'Vehicle'}}
+          to='/listings'
+          style={{...linkStyle, color: 'blue'}}
+        >
+          Vehicle
+        </Link>
+        <Link
+          color="inherit"
+          key='Electronics'
+          state={{listingDetail: 'Electronics'}}
+          to='/listings'
+          style={{...linkStyle, color: 'blue'}}
+        >
+          Electronics
+        </Link>
+        <Link
+          color="inherit"
+          key='Lands'
+          state={{listingDetail: 'House'}}
+          to='/listings'
+          style={{...linkStyle, color: 'blue'}}
+        >
+          Lands
+        </Link>
       </Toolbar>
     </React.Fragment>
   );
