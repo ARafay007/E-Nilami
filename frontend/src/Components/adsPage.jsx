@@ -78,7 +78,7 @@ const PostAds = () => {
     formData.append('condition', condition)
     formData.append('activity', activity);
     formData.append('category', category);
-    formData.append('date', Date.now());
+    formData.append('date', new Date().getTime());
     
     for(let i=0; i<image.length; i++){
       formData.append('images', image[i]);
@@ -86,6 +86,9 @@ const PostAds = () => {
 
     const resp = await fetch('http://localhost:3005/api/v1/user/userActivity', {
       method: 'POST',
+      headers: {
+        authorization: `Bearer ${user.token}`,
+      },
       body: formData
     });
 

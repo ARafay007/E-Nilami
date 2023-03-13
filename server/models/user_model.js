@@ -8,7 +8,7 @@ const userSchema=new Schema({
     },
     lastname:{
         type:String,
-        required:[true,"Father's name is Required"]
+        required:[true,"Last name is Required"]
     },
     nic:{
         type:String,
@@ -43,10 +43,9 @@ const userSchema=new Schema({
         type:String,
         // required:[true,"username is Required"],
         minlength:6,
-        unique:true,
-        lowercase:true
+        // unique:true,
+        // lowercase:true
     },
-
     isDisable:{
         type: Boolean,
         default: false

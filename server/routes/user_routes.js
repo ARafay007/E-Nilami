@@ -1,4 +1,5 @@
-const { getUsersData, createUser, getOneUserData, loginUser, getUsersAds, addUserActivity, getOneUserAds } = require("../controllers/user_controller");
+const { getUsersData, createUser, getOneUserData, loginUser, getUsersAds,
+       addUserActivity, getOneUserAds, getAuctionList, placeBid } = require("../controllers/user_controller");
 const {protect} = require('../controllers/auth_controller');
 const express = require("express");
 const multer = require('multer');
@@ -9,7 +10,6 @@ const multerStorage = multer.diskStorage({
       },
       filename: (req, file, cb) => {
             if(!req.body.image) req.body.image = [];
-            console.log(req.body);
             const extension =  file.mimetype.split('/')[1];
             const nameWithoutExtension = file.originalname.split('.')[0];
             const fileName = `${req.body.activity}-${req.body.user_id}-${Date.now()}-${nameWithoutExtension}.${extension}`;
@@ -25,6 +25,8 @@ const router = express.Router();
 router.get("/userInfo", protect, getUsersData);
 router.get("/userInfo/:Id", getOneUserData);
 router.get("/userAdsList/:Id", getOneUserAds);
+router.get('/auctionList', getAuctionList);
+router.patch("/placeBid/:id", placeBid);
 
 router.route("/userActivity")
       .get(getUsersAds)

@@ -85,6 +85,15 @@ function Header(props) {
         >
           Lands
         </Link>
+        <Link
+          color="inherit"
+          key='auction'
+          state={{listingDetail: 'Auction'}}
+          to='/listings'
+          style={{...linkStyle, color: 'blue'}}
+        >
+          Auction
+        </Link>
       </Toolbar>
     </React.Fragment>
   );

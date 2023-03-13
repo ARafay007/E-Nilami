@@ -2,7 +2,7 @@ const {Schema,model} = require('mongoose');
 const validator = require('validator');
 
 const userSchema=new Schema({
-    user_id: { type: Schema.Types.ObjectId, ref: 'users' },
+    user_id: { type: Schema.Types.ObjectId, ref: 'users' }, //user_id should be changed to user
     activity:{
         type:String,
         enum: ['SELL', 'BID'],
@@ -33,9 +33,11 @@ const userSchema=new Schema({
         type:Date,
         required:[true,"Date is required"]
     },
-    highest_bidder:{
-        type:String,
-    },
+    highest_bidder:[{
+        user_Id: String,
+        name:String,
+        bid:Number,
+    }],
     end_date:{
         type:Date,
         // required:[true,"Price is Required"]
