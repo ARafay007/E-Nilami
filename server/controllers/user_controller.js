@@ -95,9 +95,9 @@ exports.loginUser = async (req, res) => {
 
 exports.createUser = async (req, res) => {
   try {
-    let {name, lastname, nic, contact, location, email, password, username, isDisable} = req.body;
+    let {name, lastname, nic, contact, location, email, password, username} = req.body;
 
-    const data = await Users.create({name, lastname, nic, contact, location, email, password, username, isDisable});
+    const data = await Users.create({name, lastname, nic, contact, location, email, password, username, isDisable: false});
     res.status(200).json({ data });
   } 
   catch (error) {

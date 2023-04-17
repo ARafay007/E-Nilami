@@ -37,6 +37,7 @@ const userSchema=new Schema({
         user_Id: String,
         name:String,
         bid:Number,
+        required:false,
     }],
     end_date:{
         type:Date,

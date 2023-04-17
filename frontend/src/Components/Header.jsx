@@ -46,6 +46,7 @@ function Header(props) {
                 <Link to='/' style={linkStyle}><MenuItem value={10}>Home</MenuItem></Link>
                 <Link to='/postAds' style={linkStyle}><MenuItem value={10}>Post Ad</MenuItem></Link>
                 <Link to='/listings' state={{listingDetail: user.data}} style={linkStyle}><MenuItem value={10}>My Ads</MenuItem></Link>
+                <Link to='/chat' state={{listingDetail: user.data}} style={linkStyle}><MenuItem value={10}>Chat</MenuItem></Link>
                 <MenuItem value={10} onClick={logoutUser}>Logout</MenuItem>
               </Select>
             </FormControl>

@@ -47,3 +47,55 @@
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
 }
+
+.chatBox-conversation {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0 5px;
+}
+.conversation{
+  overflow: auto;
+  padding: 10px;
+}
+.typeBox{
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border: 1px solid rgba(37,37,37,0.2);
+  border-radius: 5px 5px 0 0;
+}
+
+.msg-box-reciever{
+  display: flex;
+  margin: 8px 2px;
+  justify-content: flex-start;
+}
+
+.msg-box-sender{
+  display: flex;
+  margin: 8px 2px;
+  justify-content: flex-end;
+}
+
+.msg, .msg2{
+  background: rgba(37,37,37,0.2);
+  border-radius: 3px;
+  padding: 5px;
+}
+
+.msg2{
+  background: rgba(0, 0, 255, 0.2);
+}
+
+.chat-btn{
+ background-color: aqua; 
+ padding: 7px 12px;
+ text-decoration: none;
+ border-radius: 5px;
+}
+
+.chat-btn:hover{
+  background-color: aquamarine;
+}

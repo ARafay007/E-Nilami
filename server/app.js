@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require('cors');
-const { userRouter } = require("./routes");
+const { userRouter, chatRouter } = require("./routes");
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const app = express();
@@ -9,7 +9,28 @@ app.use(cors({origin: '*'}));
 app.use(express.static(`${__dirname}/public/images`));
 app.use(express.json());
 
+const http = require('http');
+const server = http.createServer(app);
+const {Server} = require('socket.io');
+const io = new Server(server, {
+  cors: {origin: 'http://localhost:4321'}
+});
+
+io.on('connection', (socket) => {
+  console.log('a user has connected.', socket.id);
+  
+  socket.on('sendMsg', (data) => {
+    // console.log(data);
+    socket.broadcast.emit("recieveMsg", data);
+  });
+  
+  socket.on('disconnect', (data) => {
+    console.log('user disconnected.', data);
+  });
+})
+
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/chat", chatRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello");
@@ -29,4 +50,4 @@ app.all('*', (req, res, next) => {
 
 app.use(globalErrorHandler);
 
-module.exports=app;
+module.exports={app, server};

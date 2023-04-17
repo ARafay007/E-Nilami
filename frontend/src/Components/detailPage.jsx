@@ -1,5 +1,5 @@
 import {useState, useContext, useEffect} from 'react';
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { Grid, Box, TextField, Button } from "@mui/material";
 import { UserContext } from '../ContextAPI/userContext';
 
@@ -29,7 +29,7 @@ const AuctionEndCounter = ({end_date}) => {
 
 const DetailPage = () => {
   const location = useLocation();
-  const {user: {data: userInfo}} = useContext(UserContext);
+  const {user: {data: loggedinUser}} = useContext(UserContext);
   const [bid, setBid] = useState(0);
   const {adDetail} = location.state;
   const bidContainerStyle = {
@@ -38,7 +38,12 @@ const DetailPage = () => {
     margin: '2px 0',
     paddingBottom: '10px',
   };
-console.log(adDetail);
+  console.log(adDetail);
+
+  // useEffect(() => {
+  //   console.log(socket.connected);
+  // }, []);
+
   const otherImages = () => {
     const imgs = [];
 
@@ -72,8 +77,8 @@ console.log(adDetail);
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            user_id: userInfo._id,
-            name: userInfo.name,
+            user_id: loggedinUser._id,
+            name: loggedinUser.name,
             bid
           })
         });
@@ -93,10 +98,10 @@ console.log(adDetail);
         </Grid>
     ));
 
-    if(userInfo && adDetail.user_id._id === userInfo._id){
+    if(loggedinUser && adDetail.user_id._id === loggedinUser._id){
       return (<>{bidsList()}</>);
     }
-    else if(userInfo && adDetail.user_id._id !== userInfo._id){
+    else if(loggedinUser && adDetail.user_id._id !== loggedinUser._id){
       return (
         <>
           <Grid container spacing={1} style={bidContainerStyle}>
@@ -148,6 +153,7 @@ console.log(adDetail);
             <p><strong>Contact:</strong> {adDetail.user_id.contact}</p>
             <p><strong>Email:</strong> {adDetail.user_id.email}</p>
             <p><strong>Location:</strong> {adDetail.user_id.location}</p>
+            {loggedinUser?._id !== adDetail?.user_id?._id && <p><Link to='/chat' state={{userId: adDetail.user_id}} className='chat-btn'>Chat With Seller</Link></p>}
             {adDetail.activity === 'BID' && renderBids()}
           </Grid>
         </Grid>

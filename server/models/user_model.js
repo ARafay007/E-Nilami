@@ -39,6 +39,13 @@ const userSchema=new Schema({
         minlength:6,
         maxlength:12
     },
+    chats: [{
+        chatId: {
+            type: Schema.Types.ObjectId,
+            ref: 'chat'
+        },
+        joinId: String,
+    }],
     username:{
         type:String,
         // required:[true,"username is Required"],

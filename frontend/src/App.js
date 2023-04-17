@@ -11,6 +11,7 @@ import SignInPage from './Components/SignInPage';
 import SignUp from './Components/SignUp';
 import Header from './Components/Header';
 import PostAds from './Components/adsPage';
+import Chat from './Components/chat';
 import './styles/style.css';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -58,8 +59,10 @@ function App() {
                 <Route path='/detail' element={<DetailPage />} />
                 <Route path='/postAds' element={user?.data?._id ? <PostAds /> : <UnAuthorizedAccess />} />
                 <Route path='/listings' element={<Listings />} />
+                <Route path='/chat' element={user?.data?._id ? <Chat /> : <UnAuthorizedAccess />} />
                 <Route path='/signIn' element={<SignInPage/>} />
                 <Route path='/signUp' element={<SignUp/>} />
+                <Route path='*' element={<h1>404 Not Found!</h1>} />
             </Routes>
           </Item>
         </Grid>
