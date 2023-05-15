@@ -1,5 +1,5 @@
 import {useState, useEffect, useContext} from 'react';
-import { json, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Grid, Box, List, ListItem, ListItemButton, ListItemText} from '@mui/material';
 import io from 'socket.io-client';
 import {UserContext} from '../ContextAPI/userContext';
@@ -7,6 +7,7 @@ const socket  = io.connect('http://localhost:3005');
 
 const Chat = () => {
   const [msg, setMsg] = useState('');
+  // const [isMsgSent, setIsMsgSent] = useState('');
   const [contactList, setContactList] = useState([]);
   const [showChat, setShowChat] = useState(false);
   const [selectedJoinId, setSelectedJoinId] = useState('');
@@ -19,17 +20,18 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
-    let countRender = 1;
     socket.on('recieveMsg', (data) => {
-      const newMsgsList = contactList.map(el => {
+      const chat = JSON.parse(sessionStorage.getItem('chat'));
+
+      const newMsgsList = chat.map(el => {
         if(el.joinId === data.joinId){
           el.msgs.push({userId: data.userId, text: data.message});
         }
         return el;
       });
 
-      setContactList(newMsgsList);
-      console.log(countRender++, data);
+       sessionStorage.setItem('chat', JSON.stringify(newMsgsList));
+       setContactList(newMsgsList);
     })
   }, [socket]);
 
@@ -51,7 +53,8 @@ const Chat = () => {
         obj.msgs = el.msgs;
         return obj;
       });
-      console.log(list);
+
+      sessionStorage.setItem('chat', JSON.stringify(list));
       setContactList(list);
     }
   };
@@ -91,8 +94,6 @@ const Chat = () => {
       };
     }
 
-    socket.emit('sendMsg', {joinId, userId: activeUser._id, message: msg});
-
     const resp = await fetch(`http://localhost:3005/api/v1/chat/`, {
       method: requestType,
       headers: {'Content-Type': 'Application/json'},
@@ -100,14 +101,19 @@ const Chat = () => {
     });
 
     const {data} = await resp.json();
+    const chat = JSON.parse(sessionStorage.getItem('chat'));
+    
     const newMsgsList = contactList.map(el => {
       if(el.joinId === data.joinId){
         el.msgs = data.msgs;
       }
       return el;
     });
-    console.log(data);
+
+    // setIsMsgSent(msg);
     setContactList(newMsgsList);
+    sessionStorage.setItem('chat', JSON.stringify(newMsgsList));
+    socket.emit('sendMsg', {joinId, userId: activeUser._id, message: msg});
   };
 
   const onChatSelect = (joinId)   => {
@@ -116,7 +122,7 @@ const Chat = () => {
   };
 
   const renderChatList = () => {
-    return contactList.map((el, index) =>  (
+    return contactList?.map((el, index) =>  (
       <ListItem key={index} disablePadding onClick={() => onChatSelect(el.joinId)}>
         <ListItemButton>
           <ListItemText primary={el.name} />
@@ -126,16 +132,20 @@ const Chat = () => {
   };
 
   const renderMsgs = () => {
-    const contact = contactList.filter(el => {
+    const contact = contactList?.filter(el => {
       if(el.joinId === selectedJoinId){
         return el;
       }
     });
 
-    return contact[0].msgs.map((el, index) => {
+    return contact[0]?.msgs?.map((el, index) => {
       return (
           <div key={index}>
-            <div className={el.userId === activeUser._id ? "msg-box-sender" : 'msg-box-reciever'}><div className={el.userId === activeUser._id ? 'msg' : 'msg2'}>{el.text}</div></div>
+            <div className={el.userId === activeUser._id ? "msg-box-sender" : 'msg-box-reciever'}>
+              <div className={el.userId === activeUser._id ? 'msg' : 'msg2'}>
+              {el.text}
+              </div>
+            </div>
           </div>
         );
     });
@@ -159,9 +169,6 @@ const Chat = () => {
           <div className='chatBox-conversation'>
             <div style={{flexGrow: 8}} className='conversation'>
               {showChat && renderMsgs()}
-              {/* <div className="msg-box-sender"><div className='msg'>Message 1</div></div>
-              <div className="msg-box-reciever"><div className='msg2'>Message 22222</div></div>
-              <div className="msg-box-sender"><div className='msg'>Message 3</div></div> */}
             </div>
             <div className='typeBox'>
               <input placeholder='message...' onChange={event => setMsg(event.target.value)} style={{width: '90%', fontSize: '16px', outline: 'none'}} />
@@ -170,8 +177,6 @@ const Chat = () => {
           </div>
         </Box>
       </Grid>
-      {/* <input placeholder='message...' onChange={event => setMsg(event.target.value)}/>
-      <button onClick={sendMsg}>Send</button> */}
     </Grid>
   );
 }

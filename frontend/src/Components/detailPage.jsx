@@ -71,29 +71,33 @@ const DetailPage = () => {
   };
 
   const placeBid = async () => {
-    const resp = await fetch(`http://localhost:3005/api/v1/user/placeBid/${adDetail._id}`, {
-          method: 'PATCH',
-          headers:{
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            user_id: loggedinUser._id,
-            name: loggedinUser.name,
-            bid
-          })
-        });
-      
-    const data = await resp.json();
-    console.log(data);
+    if(bid){
+      const resp = await fetch(`http://localhost:3005/api/v1/user/placeBid/${adDetail._id}`, {
+        method: 'PATCH',
+        headers:{
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          user_Id: loggedinUser._id,
+          name: loggedinUser.name,
+          bid
+        })
+      });
+      const data = await resp.json();
+      console.log(data);
+    }
   }
 
   const renderBids = () => {
     const bidsList = () => 
-      adDetail.highest_bidder.map(({_id, name, bid}) => (
+      adDetail.highest_bidder.map(({_id, name, bid, user_Id}) => (
         <Grid container spacing={1} style={bidContainerStyle} key={_id}>
           <Grid item lg={3}>{name}</Grid>
-          <Grid item lg={6}>
+          <Grid item lg={5}>
             Bid: <strong>Rs.{bid}</strong>
+          </Grid>
+          <Grid item lg={4}>
+            <Link to='/chat' state={{userId: user_Id}} className='chat-btn'>Chat With Bidder</Link>
           </Grid>
         </Grid>
     ));

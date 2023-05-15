@@ -1,4 +1,5 @@
 import { useEffect, useState, useReducer, useContext } from 'react';
+import { useNavigate } from "react-router-dom";
 import { Grid, TextField, Divider, Box, FormLabel, FormControlLabel, RadioGroup, Radio, FormControl, Button, InputLabel, Select, MenuItem} from '@mui/material';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import {UserContext} from '../ContextAPI/userContext';
@@ -32,6 +33,7 @@ const PostAds = () => {
   const [adDetail, dispatch] = useReducer(reducer, initialState);
   const [imgsPreview, setImgsPreview] = useState([]);
   const {user} = useContext(UserContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if(!adDetail.image.length) return;
@@ -91,6 +93,9 @@ const PostAds = () => {
       },
       body: formData
     });
+
+    console.log(resp)
+    if(resp.status === 200) navigate('/');
 
     const data = await resp.json();
   };

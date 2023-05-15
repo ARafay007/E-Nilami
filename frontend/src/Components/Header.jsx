@@ -13,7 +13,10 @@ function Header(props) {
     color: 'black',
   };
 
-  const logoutUser = () => {defineUser({})};
+  const logoutUser = () => {
+    sessionStorage.removeItem('chat');
+    defineUser({})
+  };
 
   return (
     <React.Fragment>

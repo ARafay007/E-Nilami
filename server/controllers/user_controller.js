@@ -145,10 +145,10 @@ exports.getAuctionList = async (req, res) => {
 exports.placeBid = async (req, res) => {
   try{
     let {id: _id} = req.params;
-    let {user_id, name, bid} = req.body;
+    let {user_Id, name, bid} = req.body;
     bid *= 1;
 
-    let data = await userActivity.findOneAndUpdate({_id}, {$push: {highest_bidder: {user_id, name, bid}}}, {new: true});
+    let data = await userActivity.findOneAndUpdate({_id}, {$push: {highest_bidder: {user_Id, name, bid}}}, {new: true});
     console.log(data);
     res.status(200).json({msg: 'Bid placed successfully.'});
   }
