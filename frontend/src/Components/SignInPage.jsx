@@ -23,8 +23,11 @@ const theme = createTheme();
 export default function SignInPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {defineUser} = useContext(UserContext);
+  const {defineUser, lastPageVisited} = useContext(UserContext);
   const navigate = useNavigate();
+  // const lastPageURL = document.referrer;
+
+  // console.log(`last page ULR ${lastPageURL}`);
 
   const onInputValues = (event, fieldName) => {
     fieldName === 'email' ? setEmail(event.target.value) : setPassword(event.target.value);
@@ -42,8 +45,10 @@ export default function SignInPage() {
     if(resp.status >= 400 && resp.status <= 599) return;
 
     const data = await resp.json();
+    console.log(data);
     defineUser(data);
-    navigate('/');
+  
+    lastPageVisited ? navigate(lastPageVisited, {state: {userId: data.data}}) : navigate('/');
   };
 
   return (

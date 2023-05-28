@@ -1,4 +1,4 @@
-import * as React from 'react';
+import {useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {FormControl, Autocomplete} from '@mui/material';
+import { json } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -30,25 +31,45 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
+  const [location, setLocation] = useState('');
 
-    const cities = [
-        {label: 'Hyderabad', key: 1},
-        {label: 'Multan', key: 2},
-        {label: 'Faislabad', key: 3},
-        {label: 'Peshawar', key: 4},
-        {label: 'Lahore', key: 5},
-        {label: 'Karachi', key: 6},
-        {label: 'Islamabad', key: 7},
-        {label: 'Rawalpindi', key: 8},
-      ]
+  const cities = [
+    {label: 'Hyderabad', key: 1},
+    {label: 'Multan', key: 2},
+    {label: 'Faislabad', key: 3},
+    {label: 'Peshawar', key: 4},
+    {label: 'Lahore', key: 5},
+    {label: 'Karachi', key: 6},
+    {label: 'Islamabad', key: 7},
+    {label: 'Rawalpindi', key: 8},
+  ]
     
+  const handleChange = (event, city) => setLocation(city.label);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+    
+    const formData = new FormData(event.currentTarget);
+
+    formData.set('username', formData.get('firstName') + 'gg');
+
+    const signUpDetail = {
+      name: formData.get('firstName'),
+      lastname: formData.get('lastName'),
+      contact: formData.get('phone'),
+      nic: formData.get('nic'),
+      email: formData.get('email'),
+      password: formData.get('password'),
+      userName: formData.get('username'),
+      location 
+    };
+
+    console.log(signUpDetail);
+
+    const resp = await fetch('http://localhost:3005/api/v1/user/signUp', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(signUpDetail)
     });
   };
 
@@ -107,6 +128,16 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
+                  id="nic"
+                  label="NIC"
+                  name="nic"
+                  // autoComplete="nic"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
                   name="password"
                   label="Password"
                   type="password"
@@ -133,7 +164,7 @@ export default function SignUp() {
             fullWidth
             autoHighlight
             getOptionLabel={(option) => option.label}
-            //onChange={handleChange}
+            onChange={handleChange}
             renderOption={(props, option) => (
               // <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
               <Box component="li" {...props}>

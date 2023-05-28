@@ -5,14 +5,16 @@ export const UserContext = createContext();
 export const UserContextProvider = ({children}) => {
   const [ads, setAds] = useState({});
   const [user, setUser] = useState({});
-  const [chat, setChat] = useState([]);
+  const [lastPageVisited, setLastPageVisited] = useState();
+  const [sellerDetail, setSellerDetail] = useState();
 
   const defineUser = (userObj) => setUser(userObj);
+  const setLastPageURL = (URL) => setLastPageVisited(URL);
   const storeAds = adsObj => setAds(adsObj);
-  const storeChat = chatData => setChat(chatData);
+  const storeSellerDetail = detail => setSellerDetail(detail);
 
   return(
-    <UserContext.Provider value={{user, defineUser, ads, storeAds, chat, storeChat}}>
+    <UserContext.Provider value={{user, defineUser, ads, storeAds, lastPageVisited, setLastPageURL, sellerDetail, storeSellerDetail}}>
       {children}
     </UserContext.Provider>
   );

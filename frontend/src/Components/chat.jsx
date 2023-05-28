@@ -7,13 +7,15 @@ const socket  = io.connect('http://localhost:3005');
 
 const Chat = () => {
   const [msg, setMsg] = useState('');
-  // const [isMsgSent, setIsMsgSent] = useState('');
   const [contactList, setContactList] = useState([]);
   const [showChat, setShowChat] = useState(false);
   const [selectedJoinId, setSelectedJoinId] = useState('');
+  const [receiver, setReceiver] = useState('');
   const {user: {data: activeUser}} = useContext(UserContext);
   const {state} = useLocation();
   const {userId: sellerDetail} = state;
+
+  console.log(sellerDetail);
 
   useEffect(() => {
     getChatsName();
@@ -62,9 +64,9 @@ const Chat = () => {
   const sendMsg = async () => {
     let joinId = selectedJoinId || `${activeUser._id}${sellerDetail._id}`;
     const hasJoinId_withJoinId_combination1 = activeUser.chats.find(el => el.joinId == joinId);
-    const hasJoinId_withJoinId_combination2 = activeUser.chats.find(el => el.joinId == `${sellerDetail?._id}${activeUser._id}`);
+    const hasJoinId_withJoinId_combination2 = activeUser.chats.find(el => {console.log(el.joinId); return el.joinId == `${sellerDetail?._id}${activeUser._id}`});
     let requestType, bodyObj = {};
-    
+
     if(hasJoinId_withJoinId_combination1) joinId = selectedJoinId || `${activeUser._id}${sellerDetail._id}`;
     else if(hasJoinId_withJoinId_combination2) joinId = selectedJoinId || `${sellerDetail._id}${activeUser._id}`;
 
@@ -101,7 +103,7 @@ const Chat = () => {
     });
 
     const {data} = await resp.json();
-    const chat = JSON.parse(sessionStorage.getItem('chat'));
+    // const chat = JSON.parse(sessionStorage.getItem('chat'));
     
     const newMsgsList = contactList.map(el => {
       if(el.joinId === data.joinId){
@@ -110,20 +112,24 @@ const Chat = () => {
       return el;
     });
 
+    console.log(newMsgsList);
+
     // setIsMsgSent(msg);
     setContactList(newMsgsList);
     sessionStorage.setItem('chat', JSON.stringify(newMsgsList));
     socket.emit('sendMsg', {joinId, userId: activeUser._id, message: msg});
+    onChatSelect(joinId, sellerDetail?.name || receiver);
   };
 
-  const onChatSelect = (joinId)   => {
+  const onChatSelect = (joinId, chatWith)   => {
     setShowChat(true);
     setSelectedJoinId(joinId);
+    setReceiver(chatWith);
   };
 
   const renderChatList = () => {
-    return contactList?.map((el, index) =>  (
-      <ListItem key={index} disablePadding onClick={() => onChatSelect(el.joinId)}>
+    return contactList?.map((el, index) => (
+      <ListItem key={index} disablePadding onClick={() => onChatSelect(el.joinId, el.name)}>
         <ListItemButton>
           <ListItemText primary={el.name} />
         </ListItemButton>
@@ -167,6 +173,7 @@ const Chat = () => {
           height: '500px',
         }}>
           <div className='chatBox-conversation'>
+            <p className='receiverName'>{sellerDetail?.name || receiver}</p>
             <div style={{flexGrow: 8}} className='conversation'>
               {showChat && renderMsgs()}
             </div>

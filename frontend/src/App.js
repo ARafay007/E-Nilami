@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import {Routes, Route} from 'react-router-dom';
+import {Routes, Route, Link} from 'react-router-dom';
 import {Container, Grid} from '@mui/material';
 import { styled, Paper } from '@mui/material';
 import SearchSection from './Components/SearchSection';
@@ -36,7 +36,7 @@ const sections = [
 ];
 
 const UnAuthorizedAccess = () => {
-  return <h2>You are not logged in.</h2>
+  return <h2>You are not logged in. <Link to='/signIn'>Click here to login</Link></h2>
 }
 
 function App() {

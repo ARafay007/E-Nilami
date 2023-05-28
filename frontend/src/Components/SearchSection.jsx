@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link } from 'react-router-dom';
+import React, {useState} from 'react'
+import { Link, useNavigate } from 'react-router-dom';
 import {Grid, TextField, Button, FormControl, Autocomplete, Box} from '@mui/material';
 
 const SearchSection = () => {
@@ -14,11 +14,29 @@ const SearchSection = () => {
     {label: 'Rawalpindi', key: 8},
   ]
 
-  const [location, setLocation] = React.useState('');
-
+  const [location, setLocation] = useState('');
+  const [searchItem, setSearchItem] = useState('');
+  const navigate = useNavigate();
+  
   const handleChange = (event, city) => {
     console.log(city);
-    setLocation(city);
+    setLocation(city.label);
+  };
+
+  const handleItemSearch = (state) => (event) => {
+    state(event.target.value);
+  };
+
+  const handleSearch = async () => {
+    const resp = await fetch(`http://localhost:3005/api/v1/user/search`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({location, item: searchItem})
+    });
+    console.log(resp);
+    const {data} = await resp.json();
+
+    if(data.length) navigate('/listings', {state: {listingDetail: data}});
   };
 
   return (
@@ -58,12 +76,12 @@ const SearchSection = () => {
       </Grid>
       <Grid item xs={12} lg={4}>
         <FormControl sx={{ m: 1, minWidth: 160 }}>
-          <TextField id="standard-basic" label="Search" variant="outlined" sx={{minWidth: 300}} />
+          <TextField id="standard-basic" label="Search item" onChange={handleItemSearch(setSearchItem)} variant="outlined" sx={{minWidth: 300}} />
         </FormControl>
       </Grid>
       <Grid item xs={12} lg={1}>
         <FormControl sx={{ m: 1, minWidth: 100 }}>
-          <Button variant="contained">Search</Button>
+          <Button variant="contained" onClick={handleSearch}>Search</Button>
         </FormControl>
       </Grid>
       <Grid item xs={12} lg={1}>

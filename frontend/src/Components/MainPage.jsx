@@ -1,12 +1,20 @@
-import {useEffect, useContext} from 'react';
+import {useEffect, useContext, useState} from 'react';
 import { Link } from 'react-router-dom';
+import {Cloudinary} from "@cloudinary/url-gen";
+import {AdvancedImage} from '@cloudinary/react';
+import {thumbnail} from "@cloudinary/url-gen/actions/resize";
 import {Grid, Card, CardActionArea, CardMedia, CardContent, Typography, Divider, Chip} from '@mui/material';
 import Banner from './Banner'
 import {UserContext} from '../ContextAPI/userContext';
 
 const MainPage = () => {
   const {ads, storeAds} = useContext(UserContext);
-  
+  const cId = new Cloudinary({
+    cloud: {
+      cloudName: 'dwx3wmzsm'
+    }
+  });
+
   useEffect(() => {
     getAds();
   }, []);
@@ -27,29 +35,36 @@ const MainPage = () => {
   };
 
   const items = (category) => {
-    return category.map((el, i) => (
-      <Grid item xs={12} lg={4} key={i}>
-        <Link to='/detail' state={{adDetail: el}} style={{textDecoration: 'none'}}>
-          <Card sx={{ maxWidth: 345 }}>
-            <CardActionArea>
-              <CardMedia
-                component="img"
-                height="140"
-                image={el.image[0]}
-                alt="green iguana"
-              />
-              <CardContent>
-                <Typography variant="body2" color="text.secondary">
-                  Condition: {el.condition}
-                </Typography>
-                <Typography gutterBottom variant="h5" component="div">
-                  {el.item_name}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        </Link>
-      </Grid>)
+    return category.map((el, i) => {
+        const image = cId.image(el.images[0]);
+        image.resize(thumbnail().height(160));
+
+        return (
+          <Grid item xs={12} lg={4} key={i}>
+            <Link to='/detail' state={{adDetail: el}} style={{textDecoration: 'none'}}>
+              <Card sx={{ maxWidth: 345 }}>
+                <CardActionArea>
+                  {/* <CardMedia
+                    component="img"
+                    height="140"
+                    image={el.image[0]}
+                    alt="green iguana"
+                  /> */}
+                  <AdvancedImage cldImg={image} />
+                  <CardContent>
+                    <Typography variant="body2" color="text.secondary">
+                      Condition: {el.condition}
+                    </Typography>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {el.item_name}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Link>
+          </Grid>
+        );
+      }
     );
   };
 

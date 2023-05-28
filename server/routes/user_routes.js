@@ -1,5 +1,5 @@
 const { getUsersData, createUser, getOneUserData, loginUser, getUsersAds,
-       addUserActivity, getOneUserAds, getAuctionList, placeBid } = require("../controllers/user_controller");
+       addUserActivity, getOneUserAds, getAuctionList, placeBid, getCategoryWiseAds, searchItems } = require("../controllers/user_controller");
 const {protect} = require('../controllers/auth_controller');
 const express = require("express");
 const multer = require('multer');
@@ -24,13 +24,16 @@ const router = express.Router();
 
 router.get("/userInfo", protect, getUsersData);
 router.get("/userInfo/:Id", getOneUserData);
-router.get("/userAdsList/:Id", getOneUserAds);
+// router.get("/userAdsList/:Id", getOneUserAds);
+router.get("/userAdsList/:categoryName", getCategoryWiseAds);
 router.get('/auctionList', getAuctionList);
+router.post('/search', searchItems);
 router.patch("/placeBid/:id", placeBid);
 
 router.route("/userActivity")
       .get(getUsersAds)
-      .post(protect, upload.array('images', 5), addUserActivity);
+      .post(protect, addUserActivity);
+      // .post(protect, upload.array('images', 5), addUserActivity);
 
 router.post("/signUp", createUser);
 router.post("/login", loginUser);

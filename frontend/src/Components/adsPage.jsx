@@ -1,5 +1,5 @@
 import { useEffect, useState, useReducer, useContext } from 'react';
-import { useNavigate } from "react-router-dom";
+import { AbortedDeferredError, useNavigate } from "react-router-dom";
 import { Grid, TextField, Divider, Box, FormLabel, FormControlLabel, RadioGroup, Radio, FormControl, Button, InputLabel, Select, MenuItem} from '@mui/material';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import {UserContext} from '../ContextAPI/userContext';
@@ -10,6 +10,7 @@ const initialState = {
   condition: '',
   activity: '',
   category: '',
+  location: '',
   image: []
 };
 
@@ -72,32 +73,64 @@ const PostAds = () => {
   };
 
   const submit = async () => {
-    const {item_name, price, condition, activity, category, image} = adDetail;
-    const formData = new FormData();
-    formData.append('user_id', user.data._id);
-    formData.append('item_name', item_name);
-    formData.append('price', price);
-    formData.append('condition', condition)
-    formData.append('activity', activity);
-    formData.append('category', category);
-    formData.append('date', new Date().getTime());
     
-    for(let i=0; i<image.length; i++){
-      formData.append('images', image[i]);
-    }
+    const promises = adDetail.image.map(async el => {
+      const formData = new FormData();
+      formData.append('file', el);
+      formData.append("upload_preset", "yyedzrrl");
+
+      const cloudi = await fetch(`https://api.cloudinary.com/v1_1/dwx3wmzsm/image/upload`, {
+        method: 'POST',
+        body: formData
+      });
+
+      return await cloudi.json();
+    });
+
+    const allImagePromises = await Promise.all(promises);
+
+    const {item_name, price, condition, activity, category, location, image} = adDetail;
+    // const formData = new FormData();
+    // formData.append('user_id', user.data._id);
+    // formData.append('item_name', item_name);
+    // formData.append('price', price);
+    // formData.append('condition', condition)
+    // formData.append('activity', activity);
+    // formData.append('category', category);
+    // formData.append('date', new Date().getTime());
+    
+    // for(let i=0; i<image.length; i++){
+    //   formData.append('images', image[i]);
+    // }
+
+    const imagesPublicId = allImagePromises.map(el => el.public_id);
+    console.log(imagesPublicId);
+
+    const data = {
+      user_id: user.data._id,
+      item_name,
+      price,
+      condition,
+      activity,
+      category,
+      location,
+      date: new Date().getTime(),
+      images: imagesPublicId,
+    };
 
     const resp = await fetch('http://localhost:3005/api/v1/user/userActivity', {
       method: 'POST',
       headers: {
+        'Content-Type': 'application/json',
         authorization: `Bearer ${user.token}`,
       },
-      body: formData
+      body: JSON.stringify(data)
     });
 
-    console.log(resp)
+    // console.log(resp)
     if(resp.status === 200) navigate('/');
 
-    const data = await resp.json();
+    // const data = await resp.json();
   };
 
   return (
@@ -145,6 +178,27 @@ const PostAds = () => {
                     <MenuItem value='Vehicle'>Vehicle</MenuItem>
                     <MenuItem value='Electronics'>Electronics</MenuItem>
                     <MenuItem value='House'>House</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} lg={6}>
+                <FormControl variant="standard" sx={{ minWidth: 200 }}>
+                  <InputLabel id="demo-simple-select-label">City</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={adDetail.location}
+                    label="City"
+                    onChange={e => onChangeValue(e, 'location')}
+                  >
+                    <MenuItem value={'Hyderabad'}>Hyderabad</MenuItem>
+                    <MenuItem value={'Karachi'}>Karachi</MenuItem>
+                    <MenuItem value={'Multan'}>Multan</MenuItem>
+                    <MenuItem value={'Lahore'}>Lahore</MenuItem>
+                    <MenuItem value={'Faislabad'}>Faislabad</MenuItem>
+                    <MenuItem value={'Peshawar'}>Peshawar</MenuItem>
+                    <MenuItem value={'Islamabad'}>Islamabad</MenuItem>
+                    <MenuItem value={'Rawalpindi'}>Rawalpindi</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>

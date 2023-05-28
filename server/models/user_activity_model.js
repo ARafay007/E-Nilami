@@ -21,13 +21,17 @@ const userSchema=new Schema({
         type:Number,
         required:[true,"Price is required"]
     },
-    image:[{type:String}],
+    images:[String],
     condition:{
         type:String,
         required:[true,"Condition is required"],
     },
     description:{
         type:String
+    },
+    location: {
+        type: String,
+        required: [true, 'Location is required!'],
     },
     date:{
         type:Date,

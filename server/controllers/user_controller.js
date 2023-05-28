@@ -1,37 +1,10 @@
-const fs = require('fs').promises;
+// const fs = require('fs').promises;
 const Users = require("../models/user_model");
 const userActivity = require('../models/user_activity_model');
 const jwt = require('jsonwebtoken');
 const { dirname } = require('path');
 const path = require('path');
-const appDir = dirname(require.main.filename);
-
-const convertImgToBase64 = (img) => {
-    const file = fs.readFile(`${appDir}/public/images/${img}`, 'base64', (err, data) => {
-      if(err) return;
-  
-      const base64Img = new Buffer.from(data, 'binary').toString('base64');
-      return base64Img;
-    });
-    
-    return file;
-};
-
-const loopingCategories = async (category) => {
-  const imageBase64Array = []
-  
-  for await (let obj of category){
-    for await (let img of obj.image){
-      const extensionName = path.extname(img);
-      const base64Img = await convertImgToBase64(img);
-      const base64ImgStr = `data:image/${extensionName.split('.')[1]};base64,${base64Img}`;
-      imageBase64Array.push(base64ImgStr);
-    }
-    obj.image = [...imageBase64Array];
-  }
-
-  return category;
-}
+// const appDir = dirname(require.main.filename);
 
 exports.getUsersData = async (req, res) => {
   try {
@@ -60,10 +33,10 @@ exports.getOneUserAds = async (req, res) => {
     let data = await userActivity.find({user_id: Id});
 
     for await(let obj of data){
-      const extensionName = path.extname(obj.image[0]);
-      const base64Img = await convertImgToBase64(obj.image[0]);
+      const extensionName = path.extname(obj.images[0]);
+      const base64Img = await convertImgToBase64(obj.images[0]);
       const base64ImgStr = `data:image/${extensionName.split('.')[1]};base64,${base64Img}`;
-      obj.image[0] = base64ImgStr;
+      obj.images[0] = base64ImgStr;
     }
 
     res.status(200).json({data});
@@ -96,7 +69,7 @@ exports.loginUser = async (req, res) => {
 exports.createUser = async (req, res) => {
   try {
     let {name, lastname, nic, contact, location, email, password, username} = req.body;
-
+    console.log(req.body);
     const data = await Users.create({name, lastname, nic, contact, location, email, password, username, isDisable: false});
     res.status(200).json({ data });
   } 
@@ -105,21 +78,22 @@ exports.createUser = async (req, res) => {
   }
 };
 
+exports.getCategoryWiseAds = async (req, res) => {
+  try{
+    const {categoryName} = req.params;
+    let data = await userActivity.find({category: categoryName, activity: 'SELL', isDisable: false}).sort('-date').populate('user_id');
+    res.status(200).json({data});
+  }
+  catch(err){
+    res.status(400).json({err});
+  }
+}
+
 exports.getUsersAds = async (req, res) => {
   try {
-    let vehicleData = await userActivity.find({category: 'Vehicle', activity: 'SELL', isDisable: false}).populate("user_id");
-    let electronicsData = await userActivity.find({category: 'Electronics', activity: 'SELL', isDisable: false}).populate("user_id");
-    let houseData = await userActivity.find({category: 'House', activity: 'SELL', isDisable: false}).populate("user_id");
-
-    let imageBase64Array = [];
-    
-    vehicleData = await loopingCategories(vehicleData);
-
-    imageBase64Array = []
-    electronicsData = await loopingCategories(electronicsData);
-
-    imageBase64Array = []
-    houseData = await loopingCategories(houseData);
+    let vehicleData = await userActivity.find({category: 'Vehicle', activity: 'SELL', isDisable: false}).sort('-date').limit(2).populate("user_id");
+    let electronicsData = await userActivity.find({category: 'Electronics', activity: 'SELL', isDisable: false}).sort('-date').limit(2).populate("user_id");
+    let houseData = await userActivity.find({category: 'House', activity: 'SELL', isDisable: false}).sort('-date').limit(2).populate("user_id");
     
     res.status(200).json({ data: {Vehicle: [...vehicleData], Electronics: [...electronicsData], House: [...houseData]} });
   } 
@@ -134,7 +108,7 @@ exports.getAuctionList = async (req, res) => {
     const date = new Date();
     await userActivity.updateMany({end_date: { $lt: date.getTime() }}, {isDisable: true});
     let data = await userActivity.find({activity: 'BID', isDisable: false}).populate("user_id");
-    data = await loopingCategories(data);
+    // data = await loopingCategories(data);
     res.status(200).json({data});
   }
   catch(error){
@@ -165,8 +139,38 @@ exports.addUserActivity = async (req, res) => {
       date.setDate(date.getDate() + 1);
       req.body.end_date = date.getTime();
     }
-
+  
     let data = await userActivity.create(req.body);
+    res.status(200).json({data});
+  }
+  catch(err){
+    res.status(400).json({err});
+  }
+};
+
+exports.searchItems = async (req, res) => {
+  try{
+    const {location, item} = req.body;
+    let data;
+
+    if(location && item){
+      data = await userActivity.find({ $or: [ 
+        {item_name: {$regex: item, $options: 'i'}}, 
+        {category: {$regex: item, $options: 'i'}},
+        {location}
+        // {location: {$regrex: location, $options: 'i'}}
+      ] }).populate("user_id");
+    }
+    else if(item){
+      data = await userActivity.find({ $and: [ 
+        {item_name: {$regex: item, $options: 'i'}}, 
+        {category: {$regex: item, $options: 'i'}},
+      ] }).populate("user_id");
+    }
+    else if(location){
+      data = await userActivity.find({ location }).populate("user_id");
+    }
+
     res.status(200).json({data});
   }
   catch(err){

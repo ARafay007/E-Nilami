@@ -6,7 +6,7 @@ import {UserContext} from '../ContextAPI/userContext';
 function Header(props) {
   const { sections, title } = props;
   const [age, setAge] = React.useState('');
-  const{user, defineUser} = useContext(UserContext);
+  const{user, defineUser, setLastPageURL, storeSellerDetail} = useContext(UserContext);
 
   const linkStyle = {
     textDecoration: 'none',
@@ -15,14 +15,16 @@ function Header(props) {
 
   const logoutUser = () => {
     sessionStorage.removeItem('chat');
-    defineUser({})
+    defineUser({});
+    setLastPageURL('');
+    storeSellerDetail({});
   };
 
   return (
     <React.Fragment>
       <Toolbar sx={{ borderBottom: 1, borderColor: 'divider' }}>
         {
-          user?.data?.name || <Button href='/signIn' variant="outlined" size="small">Sign In</Button>
+          user?.data?.name || <Link to="/signIn" underline="hover"> <Button variant="outlined" size="small">Sign In</Button> </Link>
         }
         <Typography
           component="h2"
@@ -54,7 +56,7 @@ function Header(props) {
               </Select>
             </FormControl>
           </Box> : 
-          <Button href='/signUp' variant="outlined" size="small">Sign up</Button>
+          <Link to="/signUp" underline="hover"><Button href='/signUp' variant="outlined" size="small">Sign up</Button></Link>
         }
       </Toolbar>
       <Toolbar

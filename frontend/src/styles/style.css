@@ -99,3 +99,9 @@
 .chat-btn:hover{
   background-color: aquamarine;
 }
+
+.receiverName{
+  font-size: 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(200,200,200,0.5);
+}
