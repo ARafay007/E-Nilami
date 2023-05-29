@@ -18,7 +18,6 @@ exports.newChat = async (req, res) => {
     const {users, joinId} = req.body;
     const data = await chat.create(req.body);
     const userDate = await Users.updateMany({_id: {$in: [users[0].userId, users[1].userId]}}, {$push: {chats: {chatId: data._id, joinId}}});
-    console.log(data);
     res.status(201).json({data});
   }
   catch(error){

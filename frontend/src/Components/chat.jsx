@@ -65,7 +65,7 @@ const Chat = () => {
     let joinId = selectedJoinId || `${activeUser._id}${sellerDetail._id}`;
     const hasJoinId_withJoinId_combination1 = activeUser.chats.find(el => el.joinId == joinId);
     const hasJoinId_withJoinId_combination2 = activeUser.chats.find(el => {console.log(el.joinId); return el.joinId == `${sellerDetail?._id}${activeUser._id}`});
-    let requestType, bodyObj = {};
+    let requestType, bodyObj = {}, checkUserFoundInContactList = false;
 
     if(hasJoinId_withJoinId_combination1) joinId = selectedJoinId || `${activeUser._id}${sellerDetail._id}`;
     else if(hasJoinId_withJoinId_combination2) joinId = selectedJoinId || `${sellerDetail._id}${activeUser._id}`;
@@ -108,11 +108,18 @@ const Chat = () => {
     const newMsgsList = contactList.map(el => {
       if(el.joinId === data.joinId){
         el.msgs = data.msgs;
+        checkUserFoundInContactList = true;
       }
       return el;
     });
 
-    console.log(newMsgsList);
+    if(!checkUserFoundInContactList){
+      newMsgsList.push({
+        joinId: data.joinId,
+        msgs: data.msgs,
+        name: data.users[0]._id === activeUser._id ? data.users[0].name : data.users[1].name,
+      });
+    }
 
     // setIsMsgSent(msg);
     setContactList(newMsgsList);
