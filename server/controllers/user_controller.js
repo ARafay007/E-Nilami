@@ -164,7 +164,7 @@ exports.searchItems = async (req, res) => {
     else if(item){
       data = await userActivity.find({ $and: [ 
         {item_name: {$regex: item, $options: 'i'}}, 
-        {category: {$regex: item, $options: 'i'}},
+        // {category: {$regex: item, $options: 'i'}},
       ] }).populate("user_id");
     }
     else if(location){
