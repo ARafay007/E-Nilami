@@ -117,8 +117,10 @@ const DetailPage = () => {
   }
 
   const renderBids = () => {
-    const bidsList = () => 
-      adDetail.highest_bidder.map(({_id, name, bid, user_Id}) => (
+    const bidsList = () => {
+      const bidsInDescendingOrder = adDetail.highest_bidder.sort((a, b) => b.bid - a.bid);
+
+      return bidsInDescendingOrder.map(({_id, name, bid, user_Id}) => (
         <Grid container spacing={1} style={bidContainerStyle} key={_id}>
           <Grid item lg={3}>{name}</Grid>
           <Grid item lg={5}>
@@ -128,7 +130,8 @@ const DetailPage = () => {
             <Link to='/chat' state={{userId: user_Id}} className='chat-btn'>Chat With Bidder</Link>
           </Grid>
         </Grid>
-    ));
+      ))
+    };
 
     if(loggedinUser && adDetail.user_id._id === loggedinUser._id){
       return (<>{bidsList()}</>);
