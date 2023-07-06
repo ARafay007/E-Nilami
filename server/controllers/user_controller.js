@@ -91,9 +91,9 @@ exports.getCategoryWiseAds = async (req, res) => {
 
 exports.getUsersAds = async (req, res) => {
   try {
-    let vehicleData = await userActivity.find({category: 'Vehicle', activity: 'SELL', isDisable: false}).sort('-date').limit(2).populate("user_id");
-    let electronicsData = await userActivity.find({category: 'Electronics', activity: 'SELL', isDisable: false}).sort('-date').limit(2).populate("user_id");
-    let houseData = await userActivity.find({category: 'House', activity: 'SELL', isDisable: false}).sort('-date').limit(2).populate("user_id");
+    let vehicleData = await userActivity.find({category: 'Vehicle', activity: 'SELL', isDisable: false}).sort('-date').limit(3).populate("user_id");
+    let electronicsData = await userActivity.find({category: 'Electronics', activity: 'SELL', isDisable: false}).sort('-date').limit(3).populate("user_id");
+    let houseData = await userActivity.find({category: 'House', activity: 'SELL', isDisable: false}).sort('-date').limit(3).populate("user_id");
     
     res.status(200).json({ data: {Vehicle: [...vehicleData], Electronics: [...electronicsData], House: [...houseData]} });
   } 
