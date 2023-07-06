@@ -24,7 +24,7 @@ const router = express.Router();
 
 router.get("/userInfo", protect, getUsersData);
 router.get("/userInfo/:Id", getOneUserData);
-// router.get("/userAdsList/:Id", getOneUserAds);
+router.get("/adsList/:Id", getOneUserAds);
 router.get("/userAdsList/:categoryName", getCategoryWiseAds);
 router.get('/auctionList', getAuctionList);
 router.post('/search', searchItems);

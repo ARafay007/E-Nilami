@@ -27,7 +27,7 @@ const Listings = () => {
 
   const getData = async () => {
     if(listingDetail._id){
-      const resp = await fetch(`http://localhost:3005/api/v1/user/userAdsList/${listingDetail?._id}`);
+      const resp = await fetch(`http://localhost:3005/api/v1/user/adsList/${listingDetail?._id}`);
 
       if(resp.status >= 400 && resp.status <= 599) return;
 

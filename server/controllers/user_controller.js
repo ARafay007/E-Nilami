@@ -32,12 +32,12 @@ exports.getOneUserAds = async (req, res) => {
     const {Id} = req.params;
     let data = await userActivity.find({user_id: Id});
 
-    for await(let obj of data){
-      const extensionName = path.extname(obj.images[0]);
-      const base64Img = await convertImgToBase64(obj.images[0]);
-      const base64ImgStr = `data:image/${extensionName.split('.')[1]};base64,${base64Img}`;
-      obj.images[0] = base64ImgStr;
-    }
+    // for await(let obj of data){
+    //   const extensionName = path.extname(obj.images[0]);
+    //   const base64Img = await convertImgToBase64(obj.images[0]);
+    //   const base64ImgStr = `data:image/${extensionName.split('.')[1]};base64,${base64Img}`;
+    //   obj.images[0] = base64ImgStr;
+    // }
 
     res.status(200).json({data});
   }
