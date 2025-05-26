@@ -1,34 +1,12 @@
 import {useState} from 'react';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
+import { Button, TextField, Link, Grid, Box, FormControl, Autocomplete} from '@mui/material';
+// import { FormControlLabel, Checkbox, Link } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {FormControl, Autocomplete} from '@mui/material';
-import { json } from 'react-router-dom';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-const theme = createTheme();
+import api from '../utils/axiosInstance';
+import { apiEndPoint } from '../utils/apis';
 
 export default function SignUp() {
   const [location, setLocation] = useState('');
@@ -47,39 +25,46 @@ export default function SignUp() {
   const handleChange = (event, city) => setLocation(city.label);
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    try{
+      event.preventDefault();
     
-    const formData = new FormData(event.currentTarget);
+      const formData = new FormData(event.currentTarget);
 
-    formData.set('username', formData.get('firstName') + 'gg');
+      formData.set('username', formData.get('firstName') + 'gg');
 
-    const signUpDetail = {
-      name: formData.get('firstName'),
-      lastname: formData.get('lastName'),
-      contact: formData.get('phone'),
-      nic: formData.get('nic'),
-      email: formData.get('email'),
-      password: formData.get('password'),
-      userName: formData.get('username'),
-      location 
-    };
+      const signUpDetail = {
+        name: formData.get('firstName'),
+        lastname: formData.get('lastName'),
+        contact: formData.get('phone'),
+        nic: formData.get('nic'),
+        email: formData.get('email'),
+        password: formData.get('password'),
+        userName: formData.get('username'),
+        location 
+      };
 
-    console.log(signUpDetail);
+      console.log(signUpDetail);
 
-    const resp = await fetch('http://localhost:3005/api/v1/user/signUp', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(signUpDetail)
-    });
+      // const resp = await fetch('http://localhost:3005/api/v1/user/signUp', {
+      //   method: 'POST',
+      //   headers: {'Content-Type': 'application/json'},
+      //   body: JSON.stringify(signUpDetail)
+      // });
+
+      // const data = await resp.json();
+      const {data} = await api.post(apiEndPoint.signUp, signUpDetail);
+      console.log(data);
+    }
+    catch(error){
+      console.log(error);
+    }
   };
 
   return (
-    <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 4,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -184,12 +169,12 @@ export default function SignUp() {
           />
         </FormControl>
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
                   label="I want to receive inspiration, marketing promotions and updates via email."
                 />
-              </Grid>
+              </Grid> */}
             </Grid>
             <Button
               type="submit"
@@ -208,8 +193,6 @@ export default function SignUp() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
       </Container>
-    </ThemeProvider>
   );
 }
