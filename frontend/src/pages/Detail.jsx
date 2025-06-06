@@ -1,10 +1,10 @@
 import {useState, useContext, useEffect} from 'react';
 import { useLocation, Link } from "react-router-dom";
-import { Grid, Box, TextField, Button, Modal, Typography } from "@mui/material";
+import { Grid, Box, TextField, Button, Modal } from "@mui/material";
 import { UserContext } from '../ContextAPI/userContext';
 import {Cloudinary} from "@cloudinary/url-gen";
 import {AdvancedImage} from '@cloudinary/react';
-import {thumbnail, fit, fill} from "@cloudinary/url-gen/actions/resize";
+import {fill} from "@cloudinary/url-gen/actions/resize";
 
 const AuctionEndCounter = ({end_date}) => {
   const [counter, setCounter] = useState('');

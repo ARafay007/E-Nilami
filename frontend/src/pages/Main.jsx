@@ -4,7 +4,7 @@ import {Cloudinary} from "@cloudinary/url-gen";
 import {AdvancedImage} from '@cloudinary/react';
 import {thumbnail} from "@cloudinary/url-gen/actions/resize";
 import {Grid, Card, CardActionArea, CardMedia, CardContent, Typography, Divider, Chip} from '@mui/material';
-import Banner from './Banner'
+import Banner from '../Components/Banner'
 import {UserContext} from '../ContextAPI/userContext';
 
 const MainPage = () => {

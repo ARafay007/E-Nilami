@@ -3,14 +3,9 @@ import {Routes, Route, Link} from 'react-router-dom';
 import {Container, Grid} from '@mui/material';
 import { styled, Paper } from '@mui/material';
 import SearchSection from './Components/SearchSection';
-import { UserContext, UserContextProvider } from './ContextAPI/userContext';
-import MainPage from './Components/MainPage';
-import DetailPage from './Components/detailPage';
-import Listings from './Components/listingsPage';
-import SignInPage from './Components/SignInPage';
-import SignUp from './Components/SignUp';
+import { UserContext } from './ContextAPI/userContext';
+import { SignUp, SignIn, Listings, Detail, Main, PostAds } from './pages';
 import Header from './Components/Header';
-import PostAds from './Components/adsPage';
 import Chat from './Components/chat';
 import './styles/style.css';
 
@@ -46,21 +41,21 @@ function App() {
     <Container fixed>
       <Grid container spacing={2}>
       <Grid item xs={12} lg={12}>
-          <Item> <Header title="E-Nilami" sections={sections} /> </Item>
+          <Item> <Header sections={sections} /> </Item>
         </Grid>
-        <Grid item xs={12} lg={12}>
+        {/* <Grid item xs={12} lg={12}>
           <Item> <SearchSection /> </Item>
-        </Grid>
+        </Grid> */}
         <Grid item xs={12} lg={12}>
           {/* <div style={{border: '1px solid black'}}></div> */}
           <Item>
             <Routes>
-                <Route path='/' element={<MainPage />} />
-                <Route path='/detail' element={<DetailPage />} />
+                <Route path='/' element={<Main />} />
+                <Route path='/detail' element={<Detail />} />
                 <Route path='/postAds' element={user?.data?._id ? <PostAds /> : <UnAuthorizedAccess />} />
                 <Route path='/listings' element={<Listings />} />
                 <Route path='/chat' element={user?.data?._id ? <Chat /> : <UnAuthorizedAccess />} />
-                <Route path='/signIn' element={<SignInPage/>} />
+                <Route path='/signIn' element={<SignIn/>} />
                 <Route path='/signUp' element={<SignUp/>} />
                 <Route path='*' element={<h1>404 Not Found!</h1>} />
             </Routes>

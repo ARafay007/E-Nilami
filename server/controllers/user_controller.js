@@ -49,11 +49,11 @@ exports.getOneUserAds = async (req, res) => {
 exports.loginUser = async (req, res) => {
   try{
     const {email, password} = req.body;
-
+    
     if(!email || !password){
       throw 'Please provide email and password!';
     }
-
+    
     const data = await Users.findOne({email, password});
 
     if(!data) throw 'Invalid email or password.';
@@ -68,9 +68,9 @@ exports.loginUser = async (req, res) => {
 
 exports.createUser = async (req, res) => {
   try {
-    let {name, lastname, nic, contact, location, email, password, username} = req.body;
+    let {name, lastname, nic, contact, location, email, password} = req.body;
     console.log(req.body);
-    const data = await Users.create({name, lastname, nic, contact, location, email, password, username, isDisable: false});
+    const data = await Users.create({name, lastname, nic, contact, location, email, password, isDisable: false});
     res.status(200).json({ data });
   } 
   catch (error) {
