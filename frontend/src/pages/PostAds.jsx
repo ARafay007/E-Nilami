@@ -1,6 +1,6 @@
 import { useEffect, useState, useReducer, useContext } from 'react';
 import { AbortedDeferredError, useNavigate } from "react-router-dom";
-import { Grid, TextField, Divider, Box, FormLabel, FormControlLabel, RadioGroup, Radio, FormControl, Button, InputLabel, Select, MenuItem} from '@mui/material';
+import { Grid, TextField, Divider, Box, FormLabel, FormControlLabel, RadioGroup, Radio, FormControl, Button, InputLabel, Select, MenuItem, Typography} from '@mui/material';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import {UserContext} from '../ContextAPI/userContext';
 
@@ -136,7 +136,7 @@ const PostAds = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} lg={12} sx={{marginBottom: 5}}>
-        <h2 style={{textAlign: 'left'}}>Post An Ad</h2>
+        <Typography variant="h5" sx={{textAlign: 'left'}}>Post An Ad</Typography>
         <Divider />
       </Grid>
       <Grid item xs={12} lg={12} sx={{marginBottom: 5}}>
@@ -144,13 +144,34 @@ const PostAds = () => {
           <Grid item xs={12} lg={6}>
             <Grid container spacing={2}>
               <Grid item xs={12} lg={6}>
-                <TextField sx={{width: 200}} onChange={e => onChangeValue(e, 'item_name')} value={adDetail.item_name} id="standard-basic" label="Item Name" variant="standard" />
+                <TextField 
+                  sx={{width: 200}} 
+                  onChange={e => onChangeValue(e, 'item_name')} 
+                  value={adDetail.item_name} 
+                  id="standard-basic" 
+                  label="Item Name" 
+                  variant="standard" 
+                />
               </Grid>
               <Grid item xs={12} lg={6}>
-                <TextField sx={{width: 200}} type='number' onChange={e => onChangeValue(e, 'price')} value={adDetail.price} label="Price" variant="standard" inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} />
+                <TextField 
+                  sx={{width: 200}} 
+                  type='number' 
+                  onChange={e => onChangeValue(e, 'price')} 
+                  value={adDetail.price} 
+                  label="Price" 
+                  variant="standard" 
+                  inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} 
+                />
               </Grid>
               <Grid item xs={12} lg={6}>
-                <TextField sx={{width: 200}} onChange={e => onChangeValue(e, 'condition')} value={adDetail.condition} label="Condition" variant="standard" />
+                <TextField 
+                  sx={{width: 200}} 
+                  onChange={e => onChangeValue(e, 'condition')} 
+                  value={adDetail.condition} 
+                  label="Condition" 
+                  variant="standard" 
+                />
               </Grid>
               <Grid item xs={12} lg={6}>
                 <FormControl sx={{textAlign: 'left'}}>

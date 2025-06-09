@@ -8,10 +8,10 @@ import {
   Autocomplete,
   TextField,
   Drawer,
+  Typography,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import {UserContext} from '../ContextAPI/userContext';
-import { set } from 'react-hook-form';
 
 const categories = ['Vehicle', 'Electronics', 'Lands', 'Auction'];
 
@@ -27,18 +27,9 @@ const cities = [
 ];
 
 function Header() {
-  const [age, setAge] = React.useState('');
-  const{user, defineUser, setLastPageURL, storeSellerDetail} = useContext(UserContext);
   const [location, setLocation] = useState("");
   const [searchItem, setSearchItem] = useState("");
   const [toggleDrawer, setToggleDrawer] = useState(false);
-
-  const logoutUser = () => {
-    sessionStorage.removeItem('chat');
-    defineUser({});
-    setLastPageURL('');
-    storeSellerDetail({});
-  };
 
   const handleLocationSelect = (_, city) => {
     setLocation(city.label);
@@ -61,7 +52,7 @@ function Header() {
         >
           <Grid item xs={12} md={2}>
             <Link to="/" underline="hover" style={{ marginBottom: "5px" }}>
-              <h2>E-NILAMI</h2>
+              <Typography variant='h6' sx={{fontFamily: 'sans-serif', fontWeight: '700'}}>E-NILAMI</Typography>
             </Link>
           </Grid>
           {/* {
@@ -127,11 +118,12 @@ function Header() {
           }
         </Box>
       </Box>
+      {/* ------------MOBILE NAV------------ */}
       <Box sx={{ display: { xs: 'block', md: 'none' }}}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px' }}>
           <Box>
             <Link to="/" underline="hover" style={{ marginBottom: "5px" }}>
-              <h2>E-NILAMI</h2>
+              <Typography variant='h6' sx={{fontFamily: 'sans-serif', fontWeight: '700'}}>E-NILAMI</Typography>
             </Link>
           </Box>
           <Box>
@@ -143,11 +135,16 @@ function Header() {
           open={toggleDrawer}
           onClose={handleToggleDrawer}
         >
-          <Grid container sx={{ height: '300px' }}>
-            <Grid xs={11} sx={{ background: 'lightblue' }}>
-              <FormControl sx={{ m: 1, minWidth: "100%" }}>
+          <Grid container>
+            <Grid item xs={12} m={2}>
+              <Link to="/" underline="hover">
+                <Typography variant='h6' sx={{fontFamily: 'sans-serif', fontWeight: '700'}}>E-NILAMI</Typography>
+              </Link>
+            </Grid>
+            <Grid item xs={11}>
+              <FormControl sx={{ m: 2, width: "100%" }}>
                 <Autocomplete
-                  id="country-select-demo"
+                  id="country-select"
                   options={cities}
                   autoHighlight
                   getOptionLabel={(option) => option.label}
@@ -169,8 +166,8 @@ function Header() {
                 />
               </FormControl>
             </Grid>
-            <Grid size={12}>
-              <FormControl sx={{ m: 1, minWidth: "100%" }}>
+            <Grid item xs={11}>
+              <FormControl sx={{ m: 2, width: "100%" }}>
                 <TextField
                   id="standard-basic"
                   label="Search item"
@@ -178,6 +175,13 @@ function Header() {
                   variant="outlined"
                 />
               </FormControl>
+            </Grid>
+            <Grid item xs={11}>
+              <Button variant='contained' sx={{mx:2, mb: 1, width: '100%'}}>Search</Button>
+            </Grid>
+            <Grid item xs={11} sx={{display: 'flex', justifyContent: 'flex-end', mb:1 }}>
+              <Link to="/signIn" underline="hover"><Button variant="outlined" onClick={() => setToggleDrawer(false)} sx={{mr: 1}}>Sign In</Button></Link>
+              <Link to="/signUp" underline="hover"><Button variant="outlined" onClick={() => setToggleDrawer(false)}>Sign up</Button></Link>
             </Grid>
           </Grid>
         </Drawer>

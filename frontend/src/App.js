@@ -2,16 +2,15 @@ import { useContext } from 'react';
 import {Routes, Route, Link} from 'react-router-dom';
 import {Container, Grid} from '@mui/material';
 import { styled, Paper } from '@mui/material';
-import SearchSection from './Components/SearchSection';
 import { UserContext } from './ContextAPI/userContext';
+import { Header, LoggedInUserHeader } from './Components';
 import { SignUp, SignIn, Listings, Detail, Main, PostAds } from './pages';
-import Header from './Components/Header';
 import Chat from './Components/chat';
 import './styles/style.css';
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
+  // backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  // ...theme.typography.body2,
   padding: theme.spacing(2),
   textAlign: 'center',
   color: theme.palette.text.secondary,
@@ -40,12 +39,12 @@ function App() {
   return (
     <Container fixed>
       <Grid container spacing={2}>
-      <Grid item xs={12} lg={12}>
-          <Item> <Header sections={sections} /> </Item>
+        <Grid item xs={12} lg={12}>
+            <Item> <Header sections={sections} /> </Item>
         </Grid>
-        {/* <Grid item xs={12} lg={12}>
-          <Item> <SearchSection /> </Item>
-        </Grid> */}
+        <Grid item xs={12} lg={12}>
+          <LoggedInUserHeader />
+        </Grid>
         <Grid item xs={12} lg={12}>
           {/* <div style={{border: '1px solid black'}}></div> */}
           <Item>

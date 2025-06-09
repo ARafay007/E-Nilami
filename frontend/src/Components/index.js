@@ -1,3 +1,5 @@
 import InputField from "./InputField";
+import LoggedInUserHeader from "./LoggedInUserHeader";
+import Header from "./Header";
 
-export { InputField };
+export { InputField, LoggedInUserHeader, Header };
