@@ -1,8 +1,12 @@
 import { useEffect, useState, useReducer, useContext } from 'react';
-import { AbortedDeferredError, useNavigate } from "react-router-dom";
-import { Grid, TextField, Divider, Box, FormLabel, FormControlLabel, RadioGroup, Radio, FormControl, Button, InputLabel, Select, MenuItem, Typography} from '@mui/material';
+import { useNavigate } from "react-router-dom";
+import { Grid, Divider, Box, FormLabel, FormControlLabel, FormHelperText, RadioGroup, Radio, FormControl, Button, InputLabel, Select, MenuItem, Typography} from '@mui/material';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import {UserContext} from '../ContextAPI/userContext';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { styled } from '@mui/material/styles';
+import { InputField } from "../Components";
+import { Controller, useForm } from "react-hook-form";
 
 const initialState = {
   item_name: '',
@@ -13,6 +17,18 @@ const initialState = {
   location: '',
   image: []
 };
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 
 const reducer = (state, action) => {
   const {type, payload, fieldName} = action;
@@ -35,6 +51,19 @@ const PostAds = () => {
   const [imgsPreview, setImgsPreview] = useState([]);
   const {user} = useContext(UserContext);
   const navigate = useNavigate();
+
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      item_name: '',
+      price: '',
+      condition: '',
+      activity: '',
+      category: '',
+      location: '',
+      image: []
+    },
+    mode: "onSubmit",
+  });
 
   useEffect(() => {
     if(!adDetail.image.length) return;
@@ -72,24 +101,25 @@ const PostAds = () => {
     return imgs;
   };
 
-  const submit = async () => {
-    
-    const promises = adDetail.image.map(async el => {
-      const formData = new FormData();
-      formData.append('file', el);
-      formData.append("upload_preset", "yyedzrrl");
+  const onHandleSubmit = (data) => {
+    console.log(data);
+    // const promises = adDetail.image.map(async el => {
+    //   const formData = new FormData();
+    //   formData.append('file', el);
+    //   formData.append("upload_preset", "yyedzrrl");
 
-      const cloudi = await fetch(`https://api.cloudinary.com/v1_1/dwx3wmzsm/image/upload`, {
-        method: 'POST',
-        body: formData
-      });
+    //   const cloudi = await fetch(`https://api.cloudinary.com/v1_1/dwx3wmzsm/image/upload`, {
+    //     method: 'POST',
+    //     body: formData
+    //   });
 
-      return await cloudi.json();
-    });
+    //   return await cloudi.json();
+    // });
 
-    const allImagePromises = await Promise.all(promises);
+    // const allImagePromises = await Promise.all(promises);
 
-    const {item_name, price, condition, activity, category, location, image} = adDetail;
+    // const {item_name, price, condition, activity, category, location, image} = adDetail;
+
     // const formData = new FormData();
     // formData.append('user_id', user.data._id);
     // formData.append('item_name', item_name);
@@ -103,38 +133,38 @@ const PostAds = () => {
     //   formData.append('images', image[i]);
     // }
 
-    const imagesPublicId = allImagePromises.map(el => el.public_id);
-    console.log(imagesPublicId);
+    // const imagesPublicId = allImagePromises.map(el => el.public_id);
+    // console.log(imagesPublicId);
 
-    const data = {
-      user_id: user.data._id,
-      item_name,
-      price,
-      condition,
-      activity,
-      category,
-      location,
-      date: new Date().getTime(),
-      images: imagesPublicId,
-    };
+    // const data = {
+    //   user_id: user.data._id,
+    //   item_name,
+    //   price,
+    //   condition,
+    //   activity,
+    //   category,
+    //   location,
+    //   date: new Date().getTime(),
+    //   images: imagesPublicId,
+    // };
 
-    const resp = await fetch('http://localhost:3005/api/v1/user/userActivity', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: `Bearer ${user.token}`,
-      },
-      body: JSON.stringify(data)
-    });
+    // const resp = await fetch('http://localhost:3005/api/v1/user/userActivity', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     authorization: `Bearer ${user.token}`,
+    //   },
+    //   body: JSON.stringify(data)
+    // });
 
     // console.log(resp)
-    if(resp.status === 200) navigate('/');
+    // if(resp.status === 200) navigate('/');
 
     // const data = await resp.json();
   };
 
   return (
-    <Grid container spacing={2}>
+    <Box component='form' noValidate onSubmit={handleSubmit(onHandleSubmit)}>
       <Grid item xs={12} lg={12} sx={{marginBottom: 5}}>
         <Typography variant="h5" sx={{textAlign: 'left'}}>Post An Ad</Typography>
         <Divider />
@@ -143,88 +173,151 @@ const PostAds = () => {
         <Grid container spacing={2}>
           <Grid item xs={12} lg={6}>
             <Grid container spacing={2}>
-              <Grid item xs={12} lg={6}>
-                <TextField 
-                  sx={{width: 200}} 
-                  onChange={e => onChangeValue(e, 'item_name')} 
-                  value={adDetail.item_name} 
-                  id="standard-basic" 
-                  label="Item Name" 
-                  variant="standard" 
+              <Grid item xs={12} md={6}>
+                <InputField 
+                  fieldName='item_name'
+                  control={control}
+                  label='Item Name'
+                  rules={{ required: { value: true, message: "Item name is required" } }}
+                  required={true}
+                  autoComplete={true}
+                  error={!!errors.item_name}
+                  helperText={errors.item_name ? errors.item_name?.message : ""}
+                  inputProps={{
+                    sx: {width: {xs: '300px', md: '200px'}}
+                  }}
                 />
               </Grid>
-              <Grid item xs={12} lg={6}>
-                <TextField 
-                  sx={{width: 200}} 
-                  type='number' 
-                  onChange={e => onChangeValue(e, 'price')} 
-                  value={adDetail.price} 
-                  label="Price" 
-                  variant="standard" 
-                  inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} 
+              <Grid item xs={12} md={6}>
+                <InputField 
+                  fieldName='price'
+                  control={control}
+                  label='Price'
+                  rules={{ required: { value: true, message: "Price is required" } }}
+                  autoComplete={true}
+                  error={!!errors.price}
+                  helperText={errors.price ? errors.price?.message : ""}
+                  inputProps={{
+                    sx: {width: {xs: '300px', md: '200px'}}
+                  }}
                 />
               </Grid>
-              <Grid item xs={12} lg={6}>
-                <TextField 
-                  sx={{width: 200}} 
-                  onChange={e => onChangeValue(e, 'condition')} 
-                  value={adDetail.condition} 
-                  label="Condition" 
-                  variant="standard" 
+              <Grid item xs={12} md={6}>
+                <InputField 
+                  fieldName='condition'
+                  control={control}
+                  label='Condition'
+                  rules={{ required: { value: true, message: "Condition is required." } }}
+                  required={true}
+                  autoComplete={true}
+                  error={!!errors.condition}
+                  helperText={errors.condition ? errors.condition.message : ""}
+                  inputProps={{
+                    sx: {width: {xs: '300px', md: '200px'}}
+                  }}
                 />
               </Grid>
-              <Grid item xs={12} lg={6}>
-                <FormControl sx={{textAlign: 'left'}}>
-                  <FormLabel id="demo-row-radio-buttons-group-label">Add Type</FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                    name="row-radio-buttons-group"
-                  >
-                    <FormControlLabel onChange={e => onChangeValue(e, 'activity')} value="SELL" control={<Radio />} label="Sell" />
-                    <FormControlLabel onChange={e => onChangeValue(e, 'activity')} value="BID" control={<Radio />} label="Bid" />
-                  </RadioGroup>
-                </FormControl>
+              <Grid item xs={12} md={6}>
+                <Controller 
+                  name="category"
+                  control={control}
+                  rules={{required: {value: true, message: 'Please select category.'}}}
+                  render={({field}) => (
+                    <FormControl sx={{width: {xs: '100%'}}} error={!!errors.category}>
+                      <InputLabel id="demo-simple-select-label">Categories</InputLabel>
+                      <Select
+                        {...field}
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        label="Option"
+                      >
+                        <MenuItem value='Vehicle'>Vehicle</MenuItem>
+                        <MenuItem value='Electronics'>Electronics</MenuItem>
+                        <MenuItem value='House'>House</MenuItem>
+                      </Select>
+                      <FormHelperText>{errors.category?.message}</FormHelperText>
+                    </FormControl>
+                  )}
+                />
               </Grid>
-              <Grid item xs={12} lg={6}>
-                <FormControl variant="standard" sx={{ minWidth: 200 }}>
-                  <InputLabel id="demo-simple-select-label">Categories</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="Option"
-                    value={adDetail.category}
-                    onChange={e => onChangeValue(e, 'category')}
-                  >
-                    <MenuItem value='Vehicle'>Vehicle</MenuItem>
-                    <MenuItem value='Electronics'>Electronics</MenuItem>
-                    <MenuItem value='House'>House</MenuItem>
-                  </Select>
-                </FormControl>
+              <Grid item xs={12} md={6}>
+                <Controller 
+                  name="location"
+                  control={control}
+                  rules={{required: {value: true, message: 'Please select location.'}}}
+                  render={({field}) => (
+                    <FormControl  sx={{width: {xs: "100%"}}} error={!!errors.location}>
+                      <InputLabel id="demo-simple-select-label">City</InputLabel>
+                      <Select
+                        {...field}
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        label="City"
+                      >
+                        <MenuItem value={'Hyderabad'}>Hyderabad</MenuItem>
+                        <MenuItem value={'Karachi'}>Karachi</MenuItem>
+                        <MenuItem value={'Multan'}>Multan</MenuItem>
+                        <MenuItem value={'Lahore'}>Lahore</MenuItem>
+                        <MenuItem value={'Faislabad'}>Faislabad</MenuItem>
+                        <MenuItem value={'Peshawar'}>Peshawar</MenuItem>
+                        <MenuItem value={'Islamabad'}>Islamabad</MenuItem>
+                        <MenuItem value={'Rawalpindi'}>Rawalpindi</MenuItem>
+                      </Select>
+                      <FormHelperText>{errors.location?.message}</FormHelperText>
+                    </FormControl>
+                  )}
+                />
               </Grid>
-              <Grid item xs={12} lg={6}>
-                <FormControl variant="standard" sx={{ minWidth: 200 }}>
-                  <InputLabel id="demo-simple-select-label">City</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={adDetail.location}
-                    label="City"
-                    onChange={e => onChangeValue(e, 'location')}
-                  >
-                    <MenuItem value={'Hyderabad'}>Hyderabad</MenuItem>
-                    <MenuItem value={'Karachi'}>Karachi</MenuItem>
-                    <MenuItem value={'Multan'}>Multan</MenuItem>
-                    <MenuItem value={'Lahore'}>Lahore</MenuItem>
-                    <MenuItem value={'Faislabad'}>Faislabad</MenuItem>
-                    <MenuItem value={'Peshawar'}>Peshawar</MenuItem>
-                    <MenuItem value={'Islamabad'}>Islamabad</MenuItem>
-                    <MenuItem value={'Rawalpindi'}>Rawalpindi</MenuItem>
-                  </Select>
-                </FormControl>
+              <Grid item xs={12} md={6}>
+                <Controller 
+                  name="activity"
+                  control={control}
+                  rules={{required: {value: true, message: 'Please select activity.'}}}
+                  render={({field}) => (
+                    <FormControl sx={{textAlign: 'left', width: {xs: "95%"}}} error={!!errors.activity}>
+                      <FormLabel id="demo-row-radio-buttons-group-label">Ad Type</FormLabel>
+                      <RadioGroup
+                        row
+                        aria-labelledby="demo-row-radio-buttons-group-label"
+                        name="row-radio-buttons-group"
+                      >
+                        <FormControlLabel 
+                          {...field}
+                          value="SELL" 
+                          control={<Radio />} 
+                          label="Sell" 
+                        />
+                        <FormControlLabel 
+                          {...field}
+                          value="BID" 
+                          control={<Radio />} 
+                          label="Bid" 
+                        />
+                      </RadioGroup>
+                      <FormHelperText>{errors.activity?.message}</FormHelperText>
+                    </FormControl>
+                  )}
+                />
               </Grid>
-              <Grid item xs={12} lg={6}>
+              <Grid item xs={12} md={6}>
                 <Button
+                  component="label"
+                  role={undefined}
+                  variant="contained"
+                  tabIndex={-1}
+                  startIcon={<CloudUploadIcon />}
+                  color='success' 
+                >
+                  Upload file
+                  <VisuallyHiddenInput 
+                    type="file" 
+                    onChange={e => onChangeValue(e, 'image')}
+                    hidden
+                    accept="image/png, image/jpeg"
+                    multiple
+                  />
+                </Button>
+                {/* <Button
                   color='success'
                   variant="contained"
                   component="label"
@@ -237,18 +330,18 @@ const PostAds = () => {
                     accept="image/png, image/jpeg"
                     multiple
                   />
-                </Button>
+                </Button> */}
               </Grid>
-              <Grid item xs={12} lg={12}>
-                <Button color='primary' variant='contained' onClick={submit}>Post Ad</Button>
+              <Grid item xs={12} md={12}>
+                <Button variant='contained' type="submit">Post Ad</Button>
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12} lg={6}>
+          <Grid item xs={12} md={6}>
             <Grid container spacing={2}>
-              <Grid item xs={12} lg={12}>
-                <div className='primary-img-container'>
-                  <img src={imgsPreview[0] || './982990.jpg'} alt='some' className='image' />
+              <Grid item xs={12} md={12}>
+                <div className='primary-img-container' style={{width: "100%", background: 'yellow'}}>
+                  <img src={imgsPreview[0] || './982990.jpg'} alt='some' className='image' style={{width: "100%"}} />
                   <div className="overlay">
                     <div className="text" data-image-number='0'>{<DeleteForeverRoundedIcon sx={{fontSize: 60}} onClick={deleteImg} />}</div>
                   </div>
@@ -263,7 +356,7 @@ const PostAds = () => {
           </Grid>
         </Grid>
       </Grid>
-    </Grid>
+    </Box>
   );
 };
 

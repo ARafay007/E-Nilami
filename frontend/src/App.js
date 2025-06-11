@@ -37,7 +37,8 @@ function App() {
   const {user} = useContext(UserContext);
 
   return (
-    <Container fixed>
+
+    <Container fixed sx={{width: '100%', height: '100dvh'}}>
       <Grid container spacing={2}>
         <Grid item xs={12} lg={12}>
             <Item> <Header sections={sections} /> </Item>
@@ -49,7 +50,8 @@ function App() {
           {/* <div style={{border: '1px solid black'}}></div> */}
           <Item>
             <Routes>
-                <Route path='/' element={<Main />} />
+                <Route path='/' element={<PostAds />} />
+                {/* <Route path='/' element={<Main />} /> */}
                 <Route path='/detail' element={<Detail />} />
                 <Route path='/postAds' element={user?.data?._id ? <PostAds /> : <UnAuthorizedAccess />} />
                 <Route path='/listings' element={<Listings />} />

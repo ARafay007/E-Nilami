@@ -158,7 +158,7 @@ export default function SignUp() {
                 render={({ field }) => (
                 <Autocomplete
                 {...field}
-                  id="country-select"
+                  id="country-select-signUp"
                   options={cities}
                   isOptionEqualToValue={(option, value) => value ? option.key === value.key : false}
                   fullWidth
