@@ -1,6 +1,22 @@
 import { useEffect, useState, useReducer, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Grid, Divider, Box, FormLabel, FormControlLabel, FormHelperText, RadioGroup, Radio, FormControl, Button, InputLabel, Select, MenuItem, Typography} from '@mui/material';
+import { 
+  Grid, 
+  Divider, 
+  Box, 
+  FormLabel, 
+  FormControlLabel, 
+  FormHelperText, 
+  RadioGroup, 
+  Radio, 
+  FormControl, 
+  Button, 
+  InputLabel, 
+  Select, 
+  MenuItem, 
+  Typography,
+  Snackbar,
+} from '@mui/material';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import {UserContext} from '../ContextAPI/userContext';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -9,12 +25,6 @@ import { InputField } from "../Components";
 import { Controller, useForm } from "react-hook-form";
 
 const initialState = {
-  item_name: '',
-  price: '',
-  condition: '',
-  activity: '',
-  category: '',
-  location: '',
   image: []
 };
 
@@ -34,8 +44,6 @@ const reducer = (state, action) => {
   const {type, payload, fieldName} = action;
 
   switch(type){
-    case 'ON_FIELD_VALUE_INPUT':
-      return {...state, [fieldName]: payload};
     case 'ADD_IMAGE':
       const imgs = [];
       for(let key in payload){
@@ -49,6 +57,7 @@ const reducer = (state, action) => {
 const PostAds = () => {
   const [adDetail, dispatch] = useReducer(reducer, initialState);
   const [imgsPreview, setImgsPreview] = useState([]);
+  const [showNotification, setShowNotification] = useState(false);
   const {user} = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -60,7 +69,6 @@ const PostAds = () => {
       activity: '',
       category: '',
       location: '',
-      image: []
     },
     mode: "onSubmit",
   });
@@ -74,9 +82,7 @@ const PostAds = () => {
   }, [adDetail.image]);
 
   const onChangeValue = (event, fieldName) => {
-    fieldName === 'image' && adDetail.image.length < 6 ? 
-    dispatch({type: 'ADD_IMAGE', payload: event.target.files, fieldName}) :
-    dispatch({type: 'ON_FIELD_VALUE_INPUT', payload: event.target.value, fieldName})
+    dispatch({type: 'ADD_IMAGE', payload: event.target.files, fieldName})
   };
 
   const deleteImg = (event) => {
@@ -87,7 +93,7 @@ const PostAds = () => {
     const imgs = [];
     for(let i=1; i<5; i++){
       imgs.push(
-        <Grid item xs={6} lg={2} key={i}>
+        <Grid item xs={3} lg={2} key={i}>
           <div className='secondary-imgs-container'>
             <img src={imgsPreview[i] || './982990.jpg'} alt='some' className='image' />
             <div className="overlay">
@@ -102,7 +108,12 @@ const PostAds = () => {
   };
 
   const onHandleSubmit = (data) => {
-    console.log(data);
+    if(!adDetail.image.length) setShowNotification(true);
+    else{
+      console.log(data);
+      console.log(adDetail.image);
+    }
+    
     // const promises = adDetail.image.map(async el => {
     //   const formData = new FormData();
     //   formData.append('file', el);
@@ -162,6 +173,8 @@ const PostAds = () => {
 
     // const data = await resp.json();
   };
+
+  const handleCloseNotification = () => {setShowNotification(false);};
 
   return (
     <Box component='form' noValidate onSubmit={handleSubmit(onHandleSubmit)}>
@@ -317,22 +330,9 @@ const PostAds = () => {
                     multiple
                   />
                 </Button>
-                {/* <Button
-                  color='success'
-                  variant="contained"
-                  component="label"
-                >
-                  Upload File
-                  <input
-                    type="file"
-                    onChange={e => onChangeValue(e, 'image')}
-                    hidden
-                    accept="image/png, image/jpeg"
-                    multiple
-                  />
-                </Button> */}
               </Grid>
               <Grid item xs={12} md={12}>
+                <Divider sx={{mb: 2}} />
                 <Button variant='contained' type="submit">Post Ad</Button>
               </Grid>
             </Grid>
@@ -356,6 +356,13 @@ const PostAds = () => {
           </Grid>
         </Grid>
       </Grid>
+      <Snackbar
+        open={showNotification}
+        autoHideDuration={6000}
+        onClose={handleCloseNotification}
+        message="Please upload at least one image."
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      />
     </Box>
   );
 };
