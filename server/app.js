@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require('cors');
-const { userRouter, chatRouter } = require("./routes");
+const { userRouter, chatRouter, signedUrlRouter } = require("./routes");
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const app = express();
@@ -30,6 +30,7 @@ const server = http.createServer(app);
 
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/chat", chatRouter);
+app.use("/api/v1/s3", signedUrlRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello");

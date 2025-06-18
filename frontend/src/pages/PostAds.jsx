@@ -23,6 +23,9 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 import { InputField } from "../Components";
 import { Controller, useForm } from "react-hook-form";
+import api from '../utils/axiosInstance';
+import { apiEndPoint } from '../utils/apiEndpoints';
+import axios from 'axios';
 
 const initialState = {
   image: []
@@ -107,71 +110,83 @@ const PostAds = () => {
     return imgs;
   };
 
-  const onHandleSubmit = (data) => {
-    if(!adDetail.image.length) setShowNotification(true);
-    else{
-      console.log(data);
-      console.log(adDetail.image);
+  const onHandleSubmit = async (formData) => {
+    try{
+      if(!adDetail.image.length) setShowNotification(true);
+      else{
+        console.log(formData);
+        console.log(adDetail.image);
+        // const {data} = await api.get(`${apiEndPoint.signedURL}/${user.data._id}`);
+        
+        // await axios.put(data.url, adDetail.image[0], {
+        //   headers: {
+        //     'Content-Type': adDetail.image[0].type
+        //   }
+        // });
+      }
+      
+      // const promises = adDetail.image.map(async el => {
+      //   const formData = new FormData();
+      //   formData.append('file', el);
+      //   formData.append("upload_preset", "yyedzrrl");
+
+      //   const cloudi = await fetch(`https://api.cloudinary.com/v1_1/dwx3wmzsm/image/upload`, {
+      //     method: 'POST',
+      //     body: formData
+      //   });
+
+      //   return await cloudi.json();
+      // });
+
+      // const allImagePromises = await Promise.all(promises);
+
+      // const {item_name, price, condition, activity, category, location, image} = adDetail;
+
+      // const formData = new FormData();
+      // formData.append('user_id', user.data._id);
+      // formData.append('item_name', item_name);
+      // formData.append('price', price);
+      // formData.append('condition', condition)
+      // formData.append('activity', activity);
+      // formData.append('category', category);
+      // formData.append('date', new Date().getTime());
+      
+      // for(let i=0; i<image.length; i++){
+      //   formData.append('images', image[i]);
+      // }
+
+      // const imagesPublicId = allImagePromises.map(el => el.public_id);
+      // console.log(imagesPublicId);
+
+      // const data = {
+      //   user_id: user.data._id,
+      //   item_name,
+      //   price,
+      //   condition,
+      //   activity,
+      //   category,
+      //   location,
+      //   date: new Date().getTime(),
+      //   images: imagesPublicId,
+      // };
+
+      // const resp = await fetch('http://localhost:3005/api/v1/user/userActivity', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     authorization: `Bearer ${user.token}`,
+      //   },
+      //   body: JSON.stringify(data)
+      // });
+
+      // console.log(resp)
+      // if(resp.status === 200) navigate('/');
+
+      // const data = await resp.json();
     }
-    
-    // const promises = adDetail.image.map(async el => {
-    //   const formData = new FormData();
-    //   formData.append('file', el);
-    //   formData.append("upload_preset", "yyedzrrl");
-
-    //   const cloudi = await fetch(`https://api.cloudinary.com/v1_1/dwx3wmzsm/image/upload`, {
-    //     method: 'POST',
-    //     body: formData
-    //   });
-
-    //   return await cloudi.json();
-    // });
-
-    // const allImagePromises = await Promise.all(promises);
-
-    // const {item_name, price, condition, activity, category, location, image} = adDetail;
-
-    // const formData = new FormData();
-    // formData.append('user_id', user.data._id);
-    // formData.append('item_name', item_name);
-    // formData.append('price', price);
-    // formData.append('condition', condition)
-    // formData.append('activity', activity);
-    // formData.append('category', category);
-    // formData.append('date', new Date().getTime());
-    
-    // for(let i=0; i<image.length; i++){
-    //   formData.append('images', image[i]);
-    // }
-
-    // const imagesPublicId = allImagePromises.map(el => el.public_id);
-    // console.log(imagesPublicId);
-
-    // const data = {
-    //   user_id: user.data._id,
-    //   item_name,
-    //   price,
-    //   condition,
-    //   activity,
-    //   category,
-    //   location,
-    //   date: new Date().getTime(),
-    //   images: imagesPublicId,
-    // };
-
-    // const resp = await fetch('http://localhost:3005/api/v1/user/userActivity', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     authorization: `Bearer ${user.token}`,
-    //   },
-    //   body: JSON.stringify(data)
-    // });
-
-    // console.log(resp)
-    // if(resp.status === 200) navigate('/');
-
-    // const data = await resp.json();
+    catch(error){
+      console.log(error);
+    }
   };
 
   const handleCloseNotification = () => {setShowNotification(false);};

@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { InputField } from "../Components";
 import api from "../utils/axiosInstance";
-import { apiEndPoint } from "../utils/apis";
+import { apiEndPoint } from "../utils/apiEndpoints";
 import { Controller, useForm } from "react-hook-form";
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 

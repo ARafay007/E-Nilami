@@ -15,7 +15,7 @@ import {UserContext} from '../ContextAPI/userContext';
 import { useForm } from "react-hook-form";
 import { InputField } from '../Components';
 import api from '../utils/axiosInstance';
-import { apiEndPoint } from "../utils/apis";
+import { apiEndPoint } from "../utils/apiEndpoints";
 
 export default function SignInPage() {
   const {defineUser, lastPageVisited} = useContext(UserContext);
