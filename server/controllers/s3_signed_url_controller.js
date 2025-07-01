@@ -9,19 +9,27 @@ const s3 = new AWS.S3({
 
 exports.getImageUploadSignedURL = async (req, res) => {
     try{
-        const key = `${req.params.id}/${uuidv4()}.jpeg`;
+        const {id, imagesQty} = req.params;
 
-        s3.getSignedUrl(
-            'putObject', 
-            {
-                Bucket: 'e-nilami',
-                ContentType: 'image/jpeg',
-                Key: key,
-            },
-            (error, url) => {
-                res.status(200).json({key, url});
-            }
-        )
+        for(let i=0; i<imagesQty; i++){
+            const key = `${id}/${uuidv4()}.jpeg`;
+    
+            s3.getSignedUrl(
+                'putObject', 
+                {
+                    Bucket: 'e-nilami',
+                    ContentType: 'image/jpeg',
+                    Key: key,
+                },
+                (error, url) => {
+                    if(error){                   
+                        throw new Error(error);
+                    }
+    
+                    res.status(200).json({key, url});
+                }
+            )
+        }
     }
     catch(err){
         res.status(400).json({ err: err.Error });

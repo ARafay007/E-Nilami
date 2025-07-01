@@ -27,9 +27,9 @@ import api from '../utils/axiosInstance';
 import { apiEndPoint } from '../utils/apiEndpoints';
 import axios from 'axios';
 
-const initialState = {
-  image: []
-};
+// const initialState = {
+//   image: []
+// };
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -43,24 +43,25 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-const reducer = (state, action) => {
-  const {type, payload, fieldName} = action;
+// const reducer = (state, action) => {
+//   const {type, payload, fieldName} = action;
 
-  switch(type){
-    case 'ADD_IMAGE':
-      const imgs = [];
-      for(let key in payload){
-        if(!isNaN(key)) imgs.push(payload[key]);
-      }
-      return {...state, [fieldName]: [...state[fieldName], ...imgs]};
-    default: return state;
-  }
-};
+//   switch(type){
+//     case 'ADD_IMAGE':
+//       const imgs = [];
+//       for(let key in payload){
+//         if(!isNaN(key)) imgs.push(payload[key]);
+//       }
+//       return {...state, [fieldName]: [...state[fieldName], ...imgs]};
+//     default: return state;
+//   }
+// };
 
 const PostAds = () => {
-  const [adDetail, dispatch] = useReducer(reducer, initialState);
+  // const [adDetail, dispatch] = useReducer(reducer, initialState);
   const [imgsPreview, setImgsPreview] = useState([]);
   const [showNotification, setShowNotification] = useState(false);
+  const [images, setImages] = useState([]);
   const {user} = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -77,15 +78,15 @@ const PostAds = () => {
   });
 
   useEffect(() => {
-    if(!adDetail.image.length) return;
-
-    setImgsPreview(adDetail.image.map(el => URL.createObjectURL(el)));
+    if(!images.length) return;
+    
+    setImgsPreview(images.map(el => URL.createObjectURL(el)));
 
     return () => URL.revokeObjectURL(imgsPreview);
-  }, [adDetail.image]);
+  }, [images]);
 
   const onChangeValue = (event, fieldName) => {
-    dispatch({type: 'ADD_IMAGE', payload: event.target.files, fieldName})
+    setImages((preValue) => [...preValue, ...event.target.files]);
   };
 
   const deleteImg = (event) => {
@@ -112,17 +113,17 @@ const PostAds = () => {
 
   const onHandleSubmit = async (formData) => {
     try{
-      if(!adDetail.image.length) setShowNotification(true);
+      if(!images.length) setShowNotification(true);
       else{
-        console.log(formData);
-        console.log(adDetail.image);
-        // const {data} = await api.get(`${apiEndPoint.signedURL}/${user.data._id}`);
+        const {data} = await api.get(`${apiEndPoint.signedURL}/${user.data._id}/${images.length}`);
+        console.log(data);
         
-        // await axios.put(data.url, adDetail.image[0], {
-        //   headers: {
-        //     'Content-Type': adDetail.image[0].type
-        //   }
-        // });
+        
+        await axios.put(data.url, images[0], {
+          headers: {
+            'Content-Type': images[0].type
+          }
+        });
       }
       
       // const promises = adDetail.image.map(async el => {

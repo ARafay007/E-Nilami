@@ -50,8 +50,8 @@ function App() {
           {/* <div style={{border: '1px solid black'}}></div> */}
           <Item>
             <Routes>
-                <Route path='/' element={<PostAds />} />
-                {/* <Route path='/' element={<Main />} /> */}
+                {/* <Route path='/' element={<PostAds />} /> */}
+                <Route path='/' element={<Main />} />
                 <Route path='/detail' element={<Detail />} />
                 <Route path='/postAds' element={user?.data?._id ? <PostAds /> : <UnAuthorizedAccess />} />
                 <Route path='/listings' element={<Listings />} />
