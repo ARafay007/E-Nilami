@@ -27,10 +27,6 @@ import api from '../utils/axiosInstance';
 import { apiEndPoint } from '../utils/apiEndpoints';
 import axios from 'axios';
 
-// const initialState = {
-//   image: []
-// };
-
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
   clipPath: 'inset(50%)',
@@ -43,22 +39,7 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-// const reducer = (state, action) => {
-//   const {type, payload, fieldName} = action;
-
-//   switch(type){
-//     case 'ADD_IMAGE':
-//       const imgs = [];
-//       for(let key in payload){
-//         if(!isNaN(key)) imgs.push(payload[key]);
-//       }
-//       return {...state, [fieldName]: [...state[fieldName], ...imgs]};
-//     default: return state;
-//   }
-// };
-
 const PostAds = () => {
-  // const [adDetail, dispatch] = useReducer(reducer, initialState);
   const [imgsPreview, setImgsPreview] = useState([]);
   const [showNotification, setShowNotification] = useState(false);
   const [images, setImages] = useState([]);
@@ -85,8 +66,16 @@ const PostAds = () => {
     return () => URL.revokeObjectURL(imgsPreview);
   }, [images]);
 
-  const onChangeValue = (event, fieldName) => {
-    setImages((preValue) => [...preValue, ...event.target.files]);
+  const onChangeValue = (event) => {
+    const cloneImages = structuredClone(images);
+
+    for(let i=0; i<event.target.files.length; i++){
+      if(cloneImages.length > 4) break;
+
+      cloneImages.push(event.target.files[i]);
+    }
+
+    setImages(cloneImages);
   };
 
   const deleteImg = (event) => {
@@ -111,79 +100,42 @@ const PostAds = () => {
     return imgs;
   };
 
+
+
   const onHandleSubmit = async (formData) => {
     try{
       if(!images.length) setShowNotification(true);
-      else{
+      else{    
         const {data} = await api.get(`${apiEndPoint.signedURL}/${user.data._id}/${images.length}`);
-        console.log(data);
+
+        const {item_name, price, condition, activity, category, location} = formData;
         
+        const payload = {
+          user_id: user.data._id,
+          item_name,
+          price,
+          condition,
+          activity,
+          category,
+          location,
+          date: new Date().getTime(),
+          images: data.keyAndUrlList.map(el => el.url.split("?")[0]),
+        };
         
-        await axios.put(data.url, images[0], {
-          headers: {
-            'Content-Type': images[0].type
-          }
-        });
+        const s3ImageUploadPromises = data.keyAndUrlList.map((el, index) =>
+          axios.put(el.url, images[index], {
+              headers: {
+                'Content-Type': images[index].type
+              }
+            }
+          )
+        );
+
+        await Promise.all(s3ImageUploadPromises);
+
+        const {data: uploadedAdData} = await api.post(apiEndPoint.postAds, payload);
+        console.log(uploadedAdData);
       }
-      
-      // const promises = adDetail.image.map(async el => {
-      //   const formData = new FormData();
-      //   formData.append('file', el);
-      //   formData.append("upload_preset", "yyedzrrl");
-
-      //   const cloudi = await fetch(`https://api.cloudinary.com/v1_1/dwx3wmzsm/image/upload`, {
-      //     method: 'POST',
-      //     body: formData
-      //   });
-
-      //   return await cloudi.json();
-      // });
-
-      // const allImagePromises = await Promise.all(promises);
-
-      // const {item_name, price, condition, activity, category, location, image} = adDetail;
-
-      // const formData = new FormData();
-      // formData.append('user_id', user.data._id);
-      // formData.append('item_name', item_name);
-      // formData.append('price', price);
-      // formData.append('condition', condition)
-      // formData.append('activity', activity);
-      // formData.append('category', category);
-      // formData.append('date', new Date().getTime());
-      
-      // for(let i=0; i<image.length; i++){
-      //   formData.append('images', image[i]);
-      // }
-
-      // const imagesPublicId = allImagePromises.map(el => el.public_id);
-      // console.log(imagesPublicId);
-
-      // const data = {
-      //   user_id: user.data._id,
-      //   item_name,
-      //   price,
-      //   condition,
-      //   activity,
-      //   category,
-      //   location,
-      //   date: new Date().getTime(),
-      //   images: imagesPublicId,
-      // };
-
-      // const resp = await fetch('http://localhost:3005/api/v1/user/userActivity', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     authorization: `Bearer ${user.token}`,
-      //   },
-      //   body: JSON.stringify(data)
-      // });
-
-      // console.log(resp)
-      // if(resp.status === 200) navigate('/');
-
-      // const data = await resp.json();
     }
     catch(error){
       console.log(error);
@@ -340,7 +292,7 @@ const PostAds = () => {
                   Upload file
                   <VisuallyHiddenInput 
                     type="file" 
-                    onChange={e => onChangeValue(e, 'image')}
+                    onChange={e => onChangeValue(e)}
                     hidden
                     accept="image/png, image/jpeg"
                     multiple

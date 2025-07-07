@@ -33,6 +33,8 @@ export default function SignInPage() {
   const onHandleSubmit = async (payload) => {
     try{ 
       const {data} = await api.post(apiEndPoint.login, payload);
+      sessionStorage.setItem('token', `Bearer ${data.token}`);
+      
       defineUser(data);
   
       lastPageVisited ? navigate(lastPageVisited, {state: {userId: data.data}}) : navigate('/');  

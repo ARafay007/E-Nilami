@@ -2,20 +2,20 @@ import { Fragment, useState, useEffect, useContext } from "react";
 import { UserContext } from "../ContextAPI/userContext";
 import { Link, useLocation } from "react-router-dom";
 import { Grid, Box, Divider } from "@mui/material";
-import {Cloudinary} from "@cloudinary/url-gen";
-import {AdvancedImage} from '@cloudinary/react';
-import {thumbnail, fill, fit} from "@cloudinary/url-gen/actions/resize";
+// import {Cloudinary} from "@cloudinary/url-gen";
+// import {AdvancedImage} from '@cloudinary/react';
+// import {thumbnail, fill, fit} from "@cloudinary/url-gen/actions/resize";
 
 const Listings = () => {
   const location = useLocation();
   const {ads} = useContext(UserContext);
   const {listingDetail} = location.state;
   const [list, setList] = useState([]);
-  const cId = new Cloudinary({
-    cloud: {
-      cloudName: 'dwx3wmzsm'
-    }
-  });
+//   const cId = new Cloudinary({
+//     cloud: {
+//       cloudName: 'dwx3wmzsm'
+//     }
+//   });
 
 
   const linkStyle = {
@@ -53,9 +53,11 @@ const Listings = () => {
   const priceFormat = new Intl.NumberFormat('en-US');
 
   const renderList = () => {
+    console.log(list);
+    
     return list?.length ? list.map(el => {
-      const image = cId.image(el.images[0])
-      image.resize(fit().height(200).aspectRatio("1.0"));
+      // const image = cId.image(el.images[0])
+      // image.resize(fit().height(200).aspectRatio("1.0"));
       // image.resize(fill().height(150));
       return (
         <Fragment key={el.item_name}>
@@ -65,8 +67,8 @@ const Listings = () => {
                 <Grid item xs={12} lg={4}>
                   <Box
                     sx={{
-                      width: 'auto',
-                      height: 'auto',
+                      width: '150px',
+                      height: '150px',
                       // backgroundColor: 'primary.dark',
                       '&:hover': {
                         // backgroundColor: 'primary.main',
@@ -74,8 +76,8 @@ const Listings = () => {
                       },
                     }}
                   >
-                    <AdvancedImage cldImg={image}/>
-                    {/* <img src={el.images[0]} alt='some' style={{width: 'auto', height: '100%'}} /> */}
+                    {/* <AdvancedImage cldImg={image}/> */}
+                    <img src={el.images[0]} alt='some' style={{width: 'auto', height: '100%'}} />
                   </Box>
                 </Grid>
                 <Grid item xs={12} lg={8} sx={{textAlign: 'left'}}>
