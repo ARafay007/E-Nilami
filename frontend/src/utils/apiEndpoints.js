@@ -5,4 +5,5 @@ export const apiEndPoint = {
     login: '/api/v1/user/login',
     postAds: '/api/v1/user/userActivity',
     signedURL: '/api/v1/s3/signedURL',
+    chatList: '/api/v1/chat/chatList',
 };

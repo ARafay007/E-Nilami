@@ -9,6 +9,7 @@ import {
   Typography,
   Container,
 } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
 import { InputField } from "../Components";
 import api from "../utils/axiosInstance";
 import { apiEndPoint } from "../utils/apiEndpoints";
@@ -28,6 +29,8 @@ export default function SignUp() {
     },
     mode: "onSubmit",
   });
+  
+  const navigate = useNavigate();
 
   const cities = [
     { label: "Hyderabad", key: "Hyderabad" },
@@ -42,8 +45,8 @@ export default function SignUp() {
 
   const onHandleSubmit = async (payload) => {
     try {
-      const { data } = await api.post(apiEndPoint.signUp, {...payload, location: payload.location.key});
-      console.log(data);
+      await api.post(apiEndPoint.signUp, {...payload, location: payload.location.key});
+      navigate('/signIn');
     } catch (error) {
       console.log(error);
     }

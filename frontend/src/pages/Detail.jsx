@@ -1,10 +1,10 @@
 import {useState, useContext, useEffect} from 'react';
 import { useLocation, Link } from "react-router-dom";
-import { Grid, Box, TextField, Button, Modal } from "@mui/material";
+import { Grid, Box, TextField, Button, Modal, Typography } from "@mui/material";
 import { UserContext } from '../ContextAPI/userContext';
-import {Cloudinary} from "@cloudinary/url-gen";
-import {AdvancedImage} from '@cloudinary/react';
-import {fill} from "@cloudinary/url-gen/actions/resize";
+// import {Cloudinary} from "@cloudinary/url-gen";
+// import {AdvancedImage} from '@cloudinary/react';
+// import {fill} from "@cloudinary/url-gen/actions/resize";
 
 const AuctionEndCounter = ({end_date}) => {
   const [counter, setCounter] = useState('');
@@ -56,11 +56,11 @@ const DetailPage = () => {
     margin: '2px 0',
     paddingBottom: '10px',
   };
-  const cId = new Cloudinary({
-    cloud: {
-      cloudName: 'dwx3wmzsm'
-    }
-  });
+  // const cId = new Cloudinary({
+  //   cloud: {
+  //     cloudName: 'dwx3wmzsm'
+  //   }
+  // });
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -72,25 +72,18 @@ const DetailPage = () => {
   const otherImages = () => {
     const imgs = [];
     for(let i=1; i<adDetail?.images?.length; i++){
-      const img = cId.image(adDetail.images[i]);
-      img.resize(fill().width(50));
-
       imgs.push(
-        <Grid item xs={6} lg={2} key={i}>
-          <Box
+        <Grid item xs={2} key={i} sx={{p: 0, mr: '6px'}}>
+          {/* <Box
             sx={{
-              width: 50,
-              height: 50,
-              // backgroundColor: 'primary.dark',
+              width: '50',
               '&:hover': {
-                // backgroundColor: 'primary.main',
                 opacity: [0.9, 0.8, 0.7],
               },
             }}
-          >
-            <AdvancedImage cldImg={img} />
-            {/* <img src={adDetail.image[i]} alt='some image6' style={{width: 'auto', height: '100%'}} /> */}
-          </Box>
+          > */}
+            <img src={adDetail.images[i]} alt='some image6' style={{width: '100%'}} />
+          {/* </Box> */}
         </Grid>
       );
     }
@@ -163,59 +156,53 @@ const DetailPage = () => {
       );
     }
   };
-
-  const mainImage = cId.image(adDetail.images[0]);
-  mainImage.resize(fill().width(300));
+  
 
   return(
     <Grid container spacing={2}>
       {adDetail?.end_date && <AuctionEndCounter end_date={adDetail.end_date}/>}
-      <Grid item xs={12} lg={6}>
-        <h3>Details</h3>
+      <Grid item xs={6}>
         <Grid container spacing={2}>
-          <Grid item lg={4}><strong>Item Name</strong>: {adDetail.item_name}</Grid>
-          <Grid item lg={4}><strong>Price</strong>: Rs.{adDetail.price}</Grid>
-          <Grid item lg={4}><strong>Condition</strong>: {adDetail.condition}</Grid>
-          <Grid item lg={4}><strong>Type</strong>: {adDetail.category}</Grid>
-          {/* <Grid item lg={12} sx={{textAlign:'left'}}>
-            <h3>Description</h3>
-            <p>
-              This is first line.
-              This is second line with some more words.
-              This is third line on third line.
-            </p>
-          </Grid> */}
-          <Grid item lg={12} sx={{textAlign:'left'}}>
-            <h3>Seller Information</h3>
-            <p><strong>Name:</strong> {adDetail.user_id.name}</p>
-            <p><strong>Contact:</strong> {adDetail.user_id.contact}</p>
-            <p><strong>Email:</strong> {adDetail.user_id.email}</p>
-            <p><strong>Location:</strong> {adDetail.location}</p>
+          <Grid item xs={12} sx={{textAlign:'left'}}>
+            <Typography variant='h5'>Details</Typography>
+            <Typography variant='body2'><strong>Item Name</strong>: {adDetail.item_name}</Typography>
+            <Typography variant='body2'><strong>Category</strong>: {adDetail.category}</Typography>
+            <Typography variant='body2'><strong>Condition</strong>: {adDetail.condition}</Typography>
+            <Typography variant='body2'><strong>Price</strong>: Rs.{adDetail.price}</Typography>
+          </Grid>
+
+          <Grid item xs={12} sx={{textAlign:'left'}}>
+            <Typography variant='h5'>Seller Information</Typography>
+            <Typography variant='body2'><strong>Name:</strong> {adDetail.user_id.name}</Typography>
+            <Typography variant='body2'><strong>Contact:</strong> {adDetail.user_id.contact}</Typography>
+            <Typography variant='body2'><strong>Email:</strong> {adDetail.user_id.email}</Typography>
+            <Typography variant='body2'><strong>Location:</strong> {adDetail.location}</Typography>
             {
               loggedinUser?._id !== adDetail?.user_id?._id && 
-              <p><Link to='/chat' onClick={() => setLastPageURL('/chat')} state={{userId: adDetail.user_id}} className='chat-btn'>Chat With Seller</Link></p>
+              <Typography variant='body1' sx={{ mt: 2 }}>
+                <Link to='/chat' onClick={() => setLastPageURL('/chat')} state={{sellerDetail: adDetail.user_id}} className='chat-btn'>
+                  Chat With Seller
+                </Link>
+              </Typography>
             }
             {adDetail.activity === 'BID' && renderBids()}
           </Grid>
         </Grid>
       </Grid>
-      <Grid item xs={12} lg={6}>
+      <Grid item xs={6}>
         <Grid container spacing={2}>
-          <Grid item xs={12} lg={12}>
+          <Grid item xs={12}>
             <Box
               sx={{
-                width: 300,
-                height: 300,
-                // backgroundColor: 'primary.dark',
+                width: '100%',
+                height: {xs: 'auto'},
                 '&:hover': {
-                  // backgroundColor: 'primary.main',
                   opacity: [0.9, 0.8, 0.7],
                 },
               }}
               onClick={handleOpen}
             >
-              <AdvancedImage cldImg={mainImage} />
-              {/* <img src={adDetail.images[0]} alt='some' style={{width: 'auto', height: '100%'}} /> */}
+              <img src={adDetail.images[0]} alt={adDetail.item_name} style={{width: '100%'}} />
             </Box>
           </Grid>
           <Grid item xs={12} lg={12}>
@@ -232,7 +219,8 @@ const DetailPage = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-        <AdvancedImage cldImg={mainImage} />
+        {/* <AdvancedImage cldImg={mainImage} /> */}
+          <img src={adDetail.images[0]} alt='some' style={{width: 'auto', height: '100%'}} />
           {/* <Typography id="modal-modal-title" variant="h6" component="h2">
             Text in a modal
           </Typography>

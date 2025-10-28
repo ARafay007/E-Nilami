@@ -36,8 +36,8 @@ const MainPage = () => {
 
   const items = (category) => {
     return category.map((el, i) => {
-        const image = cId.image(el.images[0]);
-        image.resize(thumbnail().height(160));
+        // const image = cId.image(el.images[0]);
+        // image.resize(thumbnail().height(160));
 
         return (
           <Grid item xs={12} lg={4} key={i}>
@@ -50,7 +50,8 @@ const MainPage = () => {
                     image={el.image[0]}
                     alt="green iguana"
                   /> */}
-                  <AdvancedImage cldImg={image} />
+                  {/* <AdvancedImage cldImg={image} /> */}
+                  <img src={el.images[0]} alt={el.item_name} style={{width: 'auto', height: '160px'}} />
                   <CardContent>
                     <Typography variant="body2" color="text.secondary">
                       Condition: {el.condition}
